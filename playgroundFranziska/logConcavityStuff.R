@@ -19,3 +19,12 @@ hm >= hm2
 #some non-log-concave functions may have log-concave CDFs, so this is not a good test
 #test with Student's t
 (dt(alpha*x + (1 - alpha)*y,1)) >= (dt(x,1)^alpha * dt(y,1)^(1-alpha))
+
+
+#demonstration
+#according to paper, h(x) = ln(g(x)) and h'(x) = dh(x)/dx decreases monotonically with increasing x in D (domain)
+hm <- dt(seq(100),1)
+plot(x, hm)
+h <- log(hm)
+plot(x, h)
+plot(x[1:(length(x)-1)]+0.5, diff(h)/diff(x))
