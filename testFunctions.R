@@ -74,3 +74,6 @@ check_concave = function(x, h) { #x is x_k in main function; h is log of g
 
 # test for log-concavity
 #test_log_concave <- function(f, )
+
+
+#tests for Inf as input for upper bound, -Inf for lower bound, no bounds and just mode, mode with both bounds, mode with one bound
