@@ -57,7 +57,7 @@ cal_grad = function(x, f, lower=x-0.001, upper=x+0.001, ...) {
 
 
 # check h(x) is concave
-check_concave = function(x, h) {
+check_concave = function(x, h) { #x is x_k in main function; h is log of g
 	if (length(x) != length(h)) {
 		stop("x and h should be of equal length.")
 	}
