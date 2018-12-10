@@ -71,3 +71,6 @@ check_concave = function(x, h) {
 	}
 	return(concave)
 }
+
+# test for log-concavity
+#test_log_concave <- function(f, )
