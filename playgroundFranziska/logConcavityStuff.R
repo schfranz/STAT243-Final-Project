@@ -9,6 +9,13 @@ hm <- dnorm(alpha*x + (1 - alpha*y))
 hm2 <- dnorm(x)^alpha * dnorm(y)^(1-alpha)
 hm >= hm2
 
+#demo for log-concavity with normal distribution
+hm <- dnorm(seq(100),1)
+plot(x, hm)
+h <- log(hm)
+plot(x, h)
+plot(x[1:(length(x)-1)]+0.5, diff(h)/diff(x))
+
 
 #functions that are non-log-concave according to Wikipedia:
 	#Student's t
