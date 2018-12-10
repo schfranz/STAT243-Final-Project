@@ -1,73 +1,89 @@
 #main adaptive rejection sampling function
 #inputs: 
-	# -G(g?)			original function
-	# -n					number of samples(?)
-	# -lb					lower bound on x axis(?)
-	# -ub					upper bound on x axis(?)
-	# -mode				mode of g (useless?)
-	# -batch_size	number of seeds for inverse CDF
-ars <- function(G, n, lb, ub, mode, batch_size){
-	
-	#log of the original function  
-	h <- function(x){
-		return(log(g(x)))
-	}
-	#find starting x_k
-	x_k <- initialization_step(h, lb, ub)
-	
-	#initialize output variable
-	new_sample <- NULL
-	
-	#iterate until we have enough points
-	while(length(new_sample) < n){
-		
-		# calculate h_k and derivative of h_k
-		h_k <- h(x_k)
-		dh_k <- sapply(x_k,cal_grad,h)
-		
-		#intersection points
-		z_k <- generate_intersect(h_k,dh_k,x_k,lb,ub)
-		
-		#cumulative envelop 
-		#Calculate areas under exponential upper bound function for normalization purposes
-		portion <-  unlist(sapply(2:length(z_k),
-															function(i){
-																integrate(Vectorize(exp_upper_hull,vectorize.args =c("x")),
-																					z_k[i-1],z_k[i],h_k,dh_k,x_k,z_k)})[1,])
-		cum <- sum(portion)
-		#Normalize
-		envelop <- portion/cum
-		cum_env <- cumsum(envelop)
-		cum_env <- c(0,cum_env)
-		
-		#Sampling: Generate seeds for Inverse CDF method
-		seeds <- runif(batch_size)
-		x_sample <- sapply(seeds, draw_sample,
-											 cum_env = cum_env,
-											 h_k = h_k,
-											 x_k = x_k,
-											 dh_k = dh_k,
-											 z_k = z_k,
-											 portion = portion)
-		
-		#Rejection testing
-		test_result <- sapply(x_sample, rejection_test,
-													h_k = h_k,
-													x_k = x_k,
-													dh_k = dh_k,
-													z_k = z_k)
-		keep_sample <- test_result[1,]
-		add_to_x_k <- test_result[2,]
-		
-		# update accpeted points to sample
-		x_keep <- x_sample[keep_sample != 0]
-		new_sample <- c(x_keep, new_sample)
-		
-		# update x_k
-		x_k_updated = x_sample[add_to_x_k > 0]
-		x_k = sort(c(x_k, x_k_updated))
-		
-		
-	}
-	return(new_sample)
+# -G(g?)			original function
+# -n					number of samples(?)
+# -lb					lower bound on x axis(?)
+# -ub					upper bound on x axis(?)
+# -mode				mode of g (useless?)
+# -batchSize	number of seeds for inverse CDF
+library(assertthat)
+
+ars <- function(g, n, lb=-Inf, ub=Inf, mode=NULL, batchSize=100){
+  
+  # check the inputs
+  assert_that(is.numeric(n)&see_if(n>0), msg = "ERROR: n must be a valid number of sample size.")
+  assert_that(is.numeric(n)&see_if(n>0), msg = "ERROR: n must be a valid number of sample size.")
+  assert_that(is.function(g), 
+              msg = "ERROR: g is not a function, try different input.")
+  assert_that(see_if(lb<ub), msg = "ERROR: 'lb' must be smaller than ub, try different bounds.")
+  
+  # check whether lb or ub is Inf
+  if(lb == -Inf | ub == Inf){
+    initBound <- init_mode(h, lb, ub, mode)
+  } else{
+    initBound <- c(lb, ub)
+  }
+  
+  #log of the original function  
+  h <- function(x){
+    return(log(g(x)))
+  }
+  
+  #find starting xk
+  xk <- initialization_step(h, initBound[1], initBound[2])
+  
+  #initialize output variable
+  newSample <- NULL
+  
+  #iterate until sample size is satisfied
+  while(length(newSample) < n){
+    
+    # calculate hk and derivative of hk
+    hk <- h(xk)
+    dhk <- sapply(xk,cal_grad,h)
+    
+    #intersection points of upper envelope
+    zk <- generate_intersect(hk,dhk,xk,lb,ub)
+    
+    #cumulative envelop 
+    #Calculate areas under exponential upper bound function for normalization purposes
+    portion <-  unlist(sapply(2:length(zk),
+                              function(i){integrate(Vectorize(exp_upper_hull,vectorize.args =c("x")),
+                                                    zk[i-1],zk[i],hk,dhk,xk,zk)})[1,])
+    cum <- sum(portion)
+    
+    # Normalize and cumulation
+    envelop <- portion/cum
+    cumEnv <- cumsum(envelop)
+    cumEnv <- c(0,cumEnv)
+    
+    # Sampling: Generate seeds for Inverse CDF method
+    # Generate random seeds
+    seeds <- runif(batchSize)
+    xSample <- sapply(seeds, draw_sample,
+                      cumEnv = cumEnv, hk = hk,
+                      xk = xk, dhk = dhk,
+                      zk = zk,portion = portion)
+    
+    #Rejection testing
+    testResult <- sapply(xSample, rejection_test,
+                         hk = hk, xk = xk,
+                         dhk = dhk, zk = zk)
+    
+    keepSample <- testResult[1,]
+    add2xk <- testResult[2,]
+    
+    # extract index of kept samples
+    # update accpeted points to sample points
+    keepX <- xSample[keepSample > 0]
+    newSample <- c(xKeep, newSample)
+    
+    # update xk
+    # sort xk for the next iteration
+    xkUpdated = xSample[add2xk > 0]
+    xk = sort(c(xk, xkUpdated))
+    
+    
+  }
+  return(newSample[1:n])
 }
