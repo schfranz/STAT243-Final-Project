@@ -1,4 +1,11 @@
 #main adaptive rejection sampling function
+#inputs: 
+	# -G(g?)			original function
+	# -n					number of samples(?)
+	# -lb					lower bound on x axis(?)
+	# -ub					upper bound on x axis(?)
+	# -mode				mode of g (useless?)
+	# -batch_size	number of seeds for inverse CDF
 ars <- function(G, n, lb, ub, mode, batch_size){
 	
 	#log of the original function  
