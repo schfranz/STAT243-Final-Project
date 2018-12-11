@@ -79,3 +79,8 @@ check_concave = function(x, h) {
 
 
 #tests for Inf as input for upper bound, -Inf for lower bound, no bounds and just mode, mode with both bounds, mode with one bound
+
+#function that checks if input is integer (as in, a whole number, not whatever is.integer() is doing...)
+is.wholenumber <-	function(x, tol = .Machine$double.eps^0.5) {
+	abs(x - round(x)) < tol
+}
