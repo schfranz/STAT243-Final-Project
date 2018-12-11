@@ -10,10 +10,13 @@ library(assertthat)
 
 ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100){
   
+	print(nargs())
+	
   # check the inputs
-  assert_that(is.numeric(n)&see_if(n>0), msg = "ERROR: n must be a valid number of sample size.")
-  assert_that(is.function(g), 
-              msg = "ERROR: g is not a function, try different input.")
+	print(assert_that(nargs() >= 2, msg = "Not enough input arguments")) #this prints TRUE for an empty function call??
+	assert_that(nargs() <= 5, msg = "Too many input arguments")
+	assert_that(is.function(g), msg = "ERROR: g is not a function, try different input.")
+	assert_that(is.numeric(n)&see_if(n>0), msg = "ERROR: n must be a valid number of sample size.")
   assert_that(see_if(lb<ub), msg = "ERROR: 'lb' must be smaller than ub, try different bounds.")
   
   #find starting xk
