@@ -12,7 +12,7 @@ nBroken2 <- 0.3 #non-integer input for n
 test_that("ars() can't be called with wrong number of inputs", {
 	expect_error(ars(), "Not enough input arguments")
 	expect_error(ars(g), "Not enough input arguments")
-	expect_error(g, n, )
+	expect_error(ars(g, n, 0, 5, 100, 3), "Too many input arguments")
 })
 
 #acceptable function calls -- number of inputs
