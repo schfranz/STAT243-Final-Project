@@ -5,7 +5,7 @@
 require(testthat)
 
 #input tests
-#source("tests/testthat/testArsInputs.R")
+source("tests/testthat/testArsInputs.R")
 
 # assert normal density
 assertthat::assert_that(check_f_positive(dnorm,-100,100))
