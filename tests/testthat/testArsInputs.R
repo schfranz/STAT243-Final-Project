@@ -30,3 +30,6 @@ test_that("ars() cannot be called with inputs of the wrong format", {
 
 
 #faulty function calls -- logical input errors
+
+
+#tests for Inf as input for upper bound, -Inf for lower bound, no bounds and just mode, mode with both bounds, mode with one bound
