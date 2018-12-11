@@ -1,5 +1,6 @@
 #test suite
 #execute to see if function passes all tests
+#REMOVE ONCE PACKAGE EXISTS, FUNCTIONALITY SHOULD BE IN INDIVIDUAL TEST FILES (i think)
 
 require(testthat)
 
