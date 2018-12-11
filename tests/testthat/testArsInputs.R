@@ -10,7 +10,7 @@ nBroken3 <- -3 #negative input for n
 nBroken4 <- "4" #character input for n
 
 
-#faulty function calls -- number of inputs MOEP tests don't work because ars() doesn't use assert_that with nargs??
+#faulty function calls -- number of inputs
 test_that("ars() can't be called with wrong number of inputs", {
 	expect_error(ars(), "Missing input arguments")
 	expect_error(ars(g), "Missing input arguments")
