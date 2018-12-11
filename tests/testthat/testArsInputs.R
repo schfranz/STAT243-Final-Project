@@ -6,6 +6,8 @@ n <- 5000 #functional sample input for argument n
 gBroken <- runif(100) #broken sample input for argument g
 nBroken1 <- seq_len(3) #vector input for n
 nBroken2 <- 0.3 #non-integer input for n
+nBroken3 <- -3 #negative input for n
+nBroken4 <- "4" #character input for n
 
 
 #faulty function calls -- number of inputs MOEP tests don't work because ars() doesn't use assert_that with nargs??
@@ -24,8 +26,11 @@ test_that("ars() can't be called with wrong number of inputs", {
 
 #faulty function calls -- format of inputs
 test_that("ars() cannot be called with inputs of the wrong format", {
-	expect_error(ars(gBroken, n), "not a function")
-	expect_error(ars(g, nBroken1), "")
+	expect_error(ars(gBroken, n), "must be a function")
+	expect_error(ars(g, nBroken1), "single numeric values")
+	expect_error(ars(g, nBroken2), "positive integer value")
+	expect_error(ars(g, nBroken3), "positive integer value")
+	expect_error(ars(g, nBroken4), "positive integer value")
 })
 
 

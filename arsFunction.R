@@ -19,9 +19,10 @@ ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100){
 	print(assert_that(see_if(nargs() >= 2), msg = "Not enough input arguments")) #this prints TRUE for an empty function call??
 	assert_that(nargs() > 1, msg = "Not enough input arguments")
 	assert_that(nargs() < 6, msg = "Too many input arguments")
-	assert_that(is.numeric(n) && see_if(n>0), msg = "ERROR: n must be a valid number of sample size.")
-	assert_that(is.function(g), msg = "ERROR: g is not a function, try different input.")
-	assert_that(see_if(lb<ub), msg = "ERROR: 'lb' must be smaller than ub, try different bounds.")
+	assert_that(length(n) == 1, length(lb) == 1, length(ub) == 1, length(batchSize) == 1, msg = "Inputs for n, lb, ub, and batchSize must be single numeric values")
+	assert_that(is.numeric(n), see_if(n > 0), is.wholenumber(n), msg = "n must be a positive integer value")
+	assert_that(is.function(g), msg = "g must be a function input")
+	assert_that(see_if(lb<ub), msg = "Lower bound must be smaller than upper bound")
   
   #find starting xk
   xk <- initialization_step(h, lb, ub)
