@@ -11,14 +11,18 @@ library(assertthat)
 ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100){
   
 	print(nargs()) #prints 0
-	print(nargs() >= 2) #prints FALSE
+	print(nargs() > 1) #prints FALSE
+	na <- nargs()
+	print(na)
 	
 	print(missing(g))
 	
   # check the inputs
 	print(assert_that(see_if(nargs() >= 2), msg = "Not enough input arguments")) #this prints TRUE for an empty function call??
 	assert_that(nargs() > 1, msg = "Not enough input arguments")
-	assert_that(nargs() < 6, msg = "Too many input arguments")
+	assert_that(!missing(g), !missing(n), msg = "Missing input arguments")
+	#assert_that(na > 1, msg = "What in the")
+	#assert_that(nargs() < 6, msg = "Too many input arguments")
 	assert_that(length(n) == 1, length(lb) == 1, length(ub) == 1, length(batchSize) == 1, msg = "Inputs for n, lb, ub, and batchSize must be single numeric values")
 	assert_that(is.numeric(n), see_if(n > 0), is.wholenumber(n), msg = "n must be a positive integer value")
 	assert_that(is.function(g), msg = "g must be a function input")
