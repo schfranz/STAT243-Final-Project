@@ -6,11 +6,16 @@ h <- function(x){
 
 # generate intersect zj
 generate_intersect <- function(hk, dhk, xk, lb, ub){
+  # length of hk
   k = length(hk)
+  # various vectors
   xkl <- c(xk,0); xko <- c(0,xk)
   hkl <- c(hk,0); hko <- c(0,hk)
   dhkl <- c(dhk,0); dhko <- c(0,dhk)
+  
+  # compute zj
   zj <- (hkl-hko-xkl*dhkl+xko*dhko)/(dhko-dhkl)
+  # set starting point and ending point
   zj[1] <- lb
   zj[k+1] <- ub
   return(zj)
@@ -23,30 +28,60 @@ generate_intersect <- function(hk, dhk, xk, lb, ub){
 initialization_step <- function(h, lb, ub){
   
   # considering lb and ub is infinity
+  # pre-set interval delta
   if (lb==-Inf | ub==Inf){
     maxPoint <- optim(par=0, f = h, method = "L-BFGS-B", 
                       lower = lb, upper = ub, control=list(fnscale=-1))$par
-  } else {
+    if (lb==-Inf & ub==Inf){ 
+      rightPoint <- maxPoint - 1
+      midPoint <- maxPoint
+      leftPoint <- maxPoint + 1
+    }
+    else if (lb==-Inf & ub!=Inf) {
+      if (abs(maxPoint - ub) < 1e-5) {
+        rightPoint <- maxPoint
+        midPoint <- maxPoint - 1/2
+        leftPoint <- (maxPoint - 1)
+      }
+      else{
+        delta = (ub - maxPoint)/2
+        rightPoint <- maxPoint + delta
+        midPoint <- maxPoint
+        leftPoint <- (maxPoint - delta)
+      }
+    }
+    else if (lb!=-Inf & ub==Inf) {
+      if (abs(maxPoint - lb) < 1e-5) {
+        rightPoint <- maxPoint + 1
+        midPoint <- maxPoint + 1/2
+        leftPoint <- maxPoint
+      }
+      else{
+        delta = (maxPoint - lb)/2
+        rightPoint <- maxPoint + delta
+        midPoint <- maxPoint
+        leftPoint <- (maxPoint - delta)
+      }
+    }
+  }
+  else {
     maxPoint <- optimize(f = h, interval = c(lb, ub), 
                          lower = lb, upper = ub, maximum = TRUE)$maximum
-  }
-  
-  # pre-set interval delta
-  delta <- 1
-  
-  # set three points
-  if (abs(maxPoint - ub) < 1e-5) {
-    rightPoint <- maxPoint
-    midPoint <- maxPoint - delta/2
-    leftPoint <- (maxPoint - delta)
-  } else if (abs(maxPoint - lb) < 1e-5) {
-    rightPoint <- (maxPoint + delta)
-    midPoint <- maxPoint + delta/2
-    leftPoint <- maxPoint
-  } else {
-    rightPoint <- (maxPoint + delta)
-    midPoint <- maxPoint
-    leftPoint <- (maxPoint - delta)
+    delta = (ub-lb)/2
+    # set three points
+    if (abs(maxPoint - ub) < 1e-5) {
+      rightPoint <- maxPoint
+      midPoint <- maxPoint - delta/2
+      leftPoint <- (maxPoint - delta)
+    } else if (abs(maxPoint - lb) < 1e-5) {
+      rightPoint <- (maxPoint + delta)
+      midPoint <- maxPoint + delta/2
+      leftPoint <- maxPoint
+    } else {
+      rightPoint <- (maxPoint + delta)
+      midPoint <- maxPoint
+      leftPoint <- (maxPoint - delta)
+    }
   }
   
   init <- c(leftPoint, midPoint, rightPoint)
@@ -102,7 +137,7 @@ draw_sample <- function(u, cumEnv, hk, xk, dhk, zk, portion){
   return(x)
 }
 
-#rejection test
+# adaptive rejection test
 rejection_test <- function(x, hk, dhk, xk, zk){
   
   # Generate random sample from uniform distribution
@@ -115,6 +150,9 @@ rejection_test <- function(x, hk, dhk, xk, zk){
   # get rejection point for squeeze and accept test
   lowerTest = exp(lower_hull(x,hk,dhk,xk) - upper_hull(x,hk,dhk,xk,zk))
   
+  # check if we need to keep sample points
+  # check if we need to add new points to xk
+  # kernel test
   if(w <= lowerTest){
     accept = TRUE
   } else {
@@ -128,5 +166,6 @@ rejection_test <- function(x, hk, dhk, xk, zk){
   }
   
   # Return boolean indicator whether to accept candidate sample point
+  # and update these points to xk
   return(list(acceptIndicator = accept , UpdateIndicator = add))
 }
