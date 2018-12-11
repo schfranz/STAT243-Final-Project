@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1544567461588.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3472681682",
+    "id" : "410EE3A6",
+    "lastKnownWriteTime" : 1544566072,
+    "last_content_update" : 1544566072,
+    "path" : "~/Documents/Fall 2018/STAT243/STAT243-Final-Project/ars/tests/testthat/testArsOutputs.R",
+    "project_path" : "tests/testthat/testArsOutputs.R",
+    "properties" : {
+    },
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
