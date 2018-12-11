@@ -8,29 +8,16 @@
 # -batchSize	number of seeds for inverse CDF
 library(assertthat)
 
-ars <- function(g, n, lb=-Inf, ub=Inf, mode=NULL, batchSize=100){
+ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100){
   
   # check the inputs
-  assert_that(is.numeric(n)&see_if(n>0), msg = "ERROR: n must be a valid number of sample size.")
   assert_that(is.numeric(n)&see_if(n>0), msg = "ERROR: n must be a valid number of sample size.")
   assert_that(is.function(g), 
               msg = "ERROR: g is not a function, try different input.")
   assert_that(see_if(lb<ub), msg = "ERROR: 'lb' must be smaller than ub, try different bounds.")
   
-  # check whether lb or ub is Inf
-  if(lb == -Inf | ub == Inf){
-    initBound <- init_mode(h, lb, ub, mode)
-  } else{
-    initBound <- c(lb, ub)
-  }
-  
-  #log of the original function  
-  h <- function(x){
-    return(log(g(x)))
-  }
-  
   #find starting xk
-  xk <- initialization_step(h, initBound[1], initBound[2])
+  xk <- initialization_step(h, lb, ub)
   
   #initialize output variable
   newSample <- NULL
