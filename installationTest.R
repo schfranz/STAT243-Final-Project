@@ -17,8 +17,3 @@ test_that("ars() can't be called with wrong number of inputs", {
 #do a proper run with ars() that should work
 g <- function(x) dnorm(x,0,1)
 ars(g, 5000, 2, 6, 100)
-
-#test that all tests are passed
-#note: this requires the working directory to be set to the package directory
-#run either devtools::test() for a brief overview
-#or run testthat::test_dir("tests/") for a detailed test with information about individual test outcomes
