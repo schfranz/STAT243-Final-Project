@@ -75,17 +75,18 @@ initialization_step <- function(h, lb, ub){
     }
   }
   else{
-    delta <- min(abs(maxPoint-ub),abs(maxPoint-lb))/2
-    #taking care of exp case
     if (abs(maxPoint - ub) < 1e-3) {
+      delta <- abs(maxPoint-lb)/2
       rightPoint <- maxPoint
       midPoint <- maxPoint - .5*delta
       left_point <- max - delta
     } else if (abs(maxPoint - lb) < 1e-3) {
+      delta <- abs(maxPoint-ub)/2
       rightPoint <- maxPoint + delta
       midPoint <- maxPoint + .5*delta
       leftPoint <- maxPoint
     } else {
+      delta <- min(abs(maxPoint-lb),abs(maxPoint-ub))/2
       rightPoint <- maxPoint + .5*delta
       leftPoint <- maxPoint - .5*delta
       midPoint <- maxPoint
