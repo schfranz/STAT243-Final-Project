@@ -31,54 +31,58 @@ initialization_step <- function(h, lb, ub){
 
   # considering lb and ub is infinity
   # pre-set interval delta
-  maxPoint <- optim(par=0, f = h, method = "L-BFGS-B",
-                    lower = lb, upper = ub, control=list(fnscale=-1))$par
-  if (lb==-Inf & ub==Inf){
-    leftPoint = maxPoint-1
-    rightPoint = maxPoint +1
-    midPoint = maxPoint
+  if (lb==-Inf | ub==Inf){
+    maxPoint <- optim(par=0, f = h, method = "L-BFGS-B",
+                      lower = lb, upper = ub, control=list(fnscale=-1))$par
+    if (lb==-Inf & ub==Inf){
+      rightPoint <- maxPoint - 1
+      midPoint <- maxPoint
+      leftPoint <- maxPoint + 1
+    }
+    else if (lb==-Inf & ub!=Inf) {
+      if (abs(maxPoint - ub) < 1e-5) {
+        rightPoint <- maxPoint
+        midPoint <- maxPoint - 1/2
+        leftPoint <- (maxPoint - 1)
+      }
+      else{
+        delta = (ub - maxPoint)/2
+        rightPoint <- maxPoint + delta
+        midPoint <- maxPoint
+        leftPoint <- (maxPoint - delta)
+      }
+    }
+    else if (lb!=-Inf & ub==Inf) {
+      if (abs(maxPoint - lb) < 1e-5) {
+        rightPoint <- maxPoint + 1
+        midPoint <- maxPoint + 1/2
+        leftPoint <- maxPoint
+      }
+      else{
+        delta = (maxPoint - lb)/2
+        rightPoint <- maxPoint + delta
+        midPoint <- maxPoint
+        leftPoint <- (maxPoint - delta)
+      }
+    }
   }
-  else if (lb == -Inf & ub!=Inf){
-    if (abs(maxPoint - ub)<1e-3){
-      leftPoint = maxPoint-1
-      rightPoint = maxPoint
-      midPoint = maxPoint-1/2
-    }
-    else{
-      delta = abs(maxPoint-ub)
-      leftPoint = maxPoint-delta/2
-      rightPoint = maxPoint+delta/2
-      midPoint = maxPoint
-    }
-  }
-  else if (lb != -Inf & ub == Inf){
-    if (abs(maxPoint - lb)<1e-3){
-      leftPoint = maxPoint
-      rightPoint = maxPoint+1
-      midPoint = maxPoint+1/2
-    }
-    else{
-      delta = abs(maxPoint-lb)
-      leftPoint = maxPoint-delta/2
-      rightPoint = maxPoint+delta/2
-      midPoint = maxPoint
-    }
-  }
-  else{
-    delta <- (ub - lb)/2
-    #taking care of exp case
-    if (abs(maxPoint - ub) < 1e-3) {
+  else {
+    maxPoint <- optimize(f = h, interval = c(lb, ub),
+                         lower = lb, upper = ub, maximum = TRUE)$maximum
+    delta = (ub-lb)/2
+    # set three points
+    if (abs(maxPoint - ub) < 1e-5) {
       rightPoint <- maxPoint
-      midPoint <- maxPoint - .5*delta
-      left_point <- max - delta
-    } else if (abs(maxPoint - lb) < 1e-3) {
-      rightPoint <- maxPoint + delta
-      midPoint <- maxPoint + .5*delta
+      midPoint <- maxPoint - delta/2
+      leftPoint <- (maxPoint - delta)
+    } else if (abs(maxPoint - lb) < 1e-5) {
+      rightPoint <- (maxPoint + delta)
+      midPoint <- maxPoint + delta/2
       leftPoint <- maxPoint
     } else {
-      rightPoint <- maxPoint + .5*delta
-      leftPoint <- maxPoint - .5*delta
+      rightPoint <- (maxPoint + delta)
       midPoint <- maxPoint
+      leftPoint <- (maxPoint - delta)
     }
   }
 
@@ -136,7 +140,7 @@ draw_sample <- function(u, cumEnv, hk, xk, dhk, zk, portion){
 }
 
 # adaptive rejection test
-rejection_test <- function(x, h, hk, dhk, xk, zk){
+rejection_test <- function(x, hk, dhk, xk, zk){
 
   # Generate random sample from uniform distribution
   w = runif(1)
