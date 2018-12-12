@@ -69,6 +69,24 @@ Generally speaking, the algorithm can be divided up into the following steps: To
 - test for log-concavity
 - something to mention: the random number generator iterates over results after 626 unique values which can pose a problem if the user tries to generate a large sample size. We have noticed this but have not implemented a solution since
 
+### Repository Location and User Instructions
+
+The ars package resides in the Github repository "schfranz/ars" and can be installed in R using `devtools::install_github('schfranz/ars')` and made available with `library(ars)`. The package can be tested with `library(testthat); test_package('ars')`. You can get additional information by typing `?ars` or `help(ars)`.
+
+The development repository is called "schfranz/STAT243-Final-Project" if you are interested.
+
+#make package available
+library(ars)
+
+#load testing library
+library(testthat) #shouldn't be necessary once ars sets up other libraries properly?
+
+
+#do a proper run with ars() that should work
+g <- function(x) dnorm(x,0,1)
+ars(g, 5000, 2, 6, 100)
+
+
 ### Contributions
 
 *Weijie Yuan:*
