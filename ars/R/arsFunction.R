@@ -11,12 +11,13 @@
 #' This function is a statistical algorithm for generating samples from 
 #' a univariate, log-concave density.
 #'
-#' @param G original function
+
 #' @param n number of samples
 #' @param lb lower bound on x axis
 #' @param ub upper bound on x axis
 #' @param batchSize number of seeds for inverse CDF, default = 100
 #' @param randomState seed for set.seed()
+#' @param G original function
 #' @return Samples from target density
 #' @examples g <- function(x) dnorm(x,0,1) 
 #' ars(g, 5000, 2, 6, 100)
