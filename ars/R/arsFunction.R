@@ -6,30 +6,20 @@
 # -ub					upper bound on x axis(?)
 # -mode				mode of g (useless?)
 # -batchSize	number of seeds for inverse CDF
-library(assertthat)
 
-ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100, randomState=1){
+ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100){
 
-  print(nargs()) #prints 0
-  print(nargs() >= 2) #prints FALSE
+  #relevant libraries
+  library(assertthat)
 
-  print(missing(g))
-
-  # check the inputs
-  print(assert_that(see_if(nargs() >= 2), msg = "Not enough input arguments")) #this prints TRUE for an empty function call??
-  assert_that(nargs() > 1, msg = "Not enough input arguments")
-  assert_that(nargs() < 6, msg = "Too many input arguments")
-  assert_that(length(n) == 1, length(lb) == 1, length(ub) == 1, length(batchSize) == 1, msg = "Inputs for n, lb, ub, and batchSize must be single numeric values")
-  #assert_that(is.numeric(n), see_if(n > 0), is.wholenumber(n), msg = "n must be a positive integer value")
-  assert_that(is.function(g), msg = "g must be a function input")
-  assert_that(see_if(lb<ub), msg = "Lower bound must be smaller than upper bound")
-
-  # set random seed
-  set.seed(randomState)
-
-  h <- function(x){
-    return(log(g(x)))
-  }
+	#check inputs
+	assert_that(!missing(g), !missing(n), msg = "Missing input arguments")
+	assert_that(length(n) == 1, length(lb) == 1, length(ub) == 1, length(batchSize) == 1, msg = "Inputs for n, lb, ub, and batchSize must be single numeric values")
+	assert_that(is.function(g), msg = "g must be a function input")
+	assert_that(is.numeric(n), n > 0, is.wholenumber(n), msg = "n must be a positive integer value")
+	assert_that(lb < ub, msg = "Lower bound must be smaller than upper bound")
+	assert_that(is.numeric(batchSize), batchSize > 0, is.wholenumber(batchSize), msg = "batchSize must be a positive integer value")
+	assert_that(batchSize < n, msg = "batchSize must be larger than number of samples n")
 
   #find starting xk
   xk <- initialization_step(h, lb, ub)
@@ -69,8 +59,8 @@ ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100, randomState=1){
 
     #Rejection testing
     testResult <- sapply(xSample, rejection_test,
-                         h = h, hk = hk,
-                         xk = xk, dhk = dhk, zk = zk)
+                         hk = hk, xk = xk,
+                         dhk = dhk, zk = zk)
 
     keepSample <- testResult[1,]
     add2xk <- testResult[2,]
@@ -78,7 +68,7 @@ ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100, randomState=1){
     # extract index of kept samples
     # update accpeted points to sample points
     keepX <- xSample[keepSample > 0]
-    newSample <- c(keepX, newSample)
+    newSample <- c(xKeep, newSample)
 
     # update xk
     # sort xk for the next iteration
