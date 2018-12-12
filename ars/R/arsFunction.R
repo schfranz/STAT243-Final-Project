@@ -25,7 +25,12 @@ ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100, randomState=1){
 	#set random seed
 	set.seed(randomState)
 
-  #find starting xk
+	## take log
+	h <- function(x){
+	  return(log(g(x)))
+	}
+	
+  # find starting xk
   xk <- initialization_step(h, lb, ub)
 
   #initialize output variable
@@ -61,6 +66,9 @@ ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100, randomState=1){
                       cumEnv = cumEnv, hk = hk,
                       xk = xk, dhk = dhk,
                       zk = zk,portion = portion)
+    ## drop nan
+    # not affect random
+    xSample <- na.omit(xSample)
 
     #Rejection testing
     testResult <- sapply(xSample, rejection_test,
