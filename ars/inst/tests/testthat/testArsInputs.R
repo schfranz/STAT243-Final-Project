@@ -43,7 +43,7 @@ testthat::test_that("ars() cannot be called with inputs of the wrong format", {
 	testthat::expect_error(ars(g, nBroken2), "positive integer value")
 	testthat::expect_error(ars(g, nBroken3), "positive integer value")
 	testthat::expect_error(ars(g, nBroken4), "positive integer value")
-	testthat::expect_error(ars(g, n, "3"), "numeric value")
+	testthat::expect_error(ars(g, n, "3"), "non-numeric")
 })
 
 
