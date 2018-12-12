@@ -13,13 +13,13 @@ ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100){
   library(assertthat)
 
 	#check inputs
-	assert_that(!missing(g), !missing(n), msg = "Missing input arguments")
-	assert_that(length(n) == 1, length(lb) == 1, length(ub) == 1, length(batchSize) == 1, msg = "Inputs for n, lb, ub, and batchSize must be single numeric values")
-	assert_that(is.function(g), msg = "g must be a function input")
-	assert_that(is.numeric(n), n > 0, is.wholenumber(n), msg = "n must be a positive integer value")
-	assert_that(lb < ub, msg = "Lower bound must be smaller than upper bound")
-	assert_that(is.numeric(batchSize), batchSize > 0, is.wholenumber(batchSize), msg = "batchSize must be a positive integer value")
-	assert_that(batchSize < n, msg = "batchSize must be larger than number of samples n")
+	assertthat::assert_that(!missing(g), !missing(n), msg = "Missing input arguments")
+	assertthat::assert_that(length(n) == 1, length(lb) == 1, length(ub) == 1, length(batchSize) == 1, msg = "Inputs for n, lb, ub, and batchSize must be single numeric values")
+	assertthat::assert_that(is.function(g), msg = "g must be a function input")
+	assertthat::assert_that(is.numeric(n), n > 0, is.wholenumber(n), msg = "n must be a positive integer value")
+	assertthat::assert_that(lb < ub, msg = "Lower bound must be smaller than upper bound")
+	assertthat::assert_that(is.numeric(batchSize), batchSize > 0, is.wholenumber(batchSize), msg = "batchSize must be a positive integer value")
+	assertthat::assert_that(batchSize < n, msg = "batchSize must be larger than number of samples n")
 
   #find starting xk
   xk <- initialization_step(h, lb, ub)
