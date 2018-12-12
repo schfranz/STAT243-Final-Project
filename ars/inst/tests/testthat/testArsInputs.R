@@ -23,10 +23,10 @@ ubBroken2 <- nBroken1 #vector input for ub
 batchSizeBroken <- 
 
 #faulty function calls -- number of inputs
-test_that("ars() can't be called with wrong number of inputs", {
-	expect_error(ars(), "Missing input arguments")
-	expect_error(ars(g), "Missing input arguments")
-	expect_error(ars(g, n, 0, 5, 100, 3), "unused argument")
+testthat::test_that("ars() can't be called with wrong number of inputs", {
+  testthat::expect_error(ars(), "Missing input arguments")
+  testthat::expect_error(ars(g), "Missing input arguments")
+  testthat::expect_error(ars(g, n, 0, 5, 100, 3), "unused argument")
 })
 
 #acceptable function calls -- number of inputs
@@ -37,13 +37,13 @@ test_that("ars() can't be called with wrong number of inputs", {
 
 
 #faulty function calls -- format of inputs
-test_that("ars() cannot be called with inputs of the wrong format", {
-	expect_error(ars(gBroken, n), "must be a function")
-	expect_error(ars(g, nBroken1), "single numeric values")
-	expect_error(ars(g, nBroken2), "positive integer value")
-	expect_error(ars(g, nBroken3), "positive integer value")
-	expect_error(ars(g, nBroken4), "positive integer value")
-	expect_error(ars(g, n, "3"), "numeric value")
+testthat::test_that("ars() cannot be called with inputs of the wrong format", {
+	testthat::expect_error(ars(gBroken, n), "must be a function")
+  testthat::expect_error(ars(g, nBroken1), "single numeric values")
+  testthat::expect_error(ars(g, nBroken2), "positive integer value")
+  testthat::expect_error(ars(g, nBroken3), "positive integer value")
+  testthat::expect_error(ars(g, nBroken4), "positive integer value")
+  testthat::expect_error(ars(g, n, "3"), "numeric value")
 	
 })
 
