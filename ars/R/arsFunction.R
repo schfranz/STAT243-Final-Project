@@ -8,7 +8,8 @@
 # -randomState	seed for set.Seed()
 #' Adaptive Rejection Sampling
 #'
-#' This function is a statistical algorithm for generating samples from #' a univariate, log-concave density.
+#' This function is a statistical algorithm for generating samples from 
+#' a univariate, log-concave density.
 #'
 #' @param G original function
 #' @param n number of samples
@@ -17,9 +18,8 @@
 #' @param batchSize number of seeds for inverse CDF, default = 100
 #' @param randomState seed for set.seed()
 #' @return Samples from target density
-#' @example
-#’ g <- function(x) dnorm(x,0,1)
-#’ ars(g, 5000, 2, 6, 100)
+#' @examples g <- function(x) dnorm(x,0,1) 
+#' ars(g, 5000, 2, 6, 100)
 
 ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100, randomState=1){
 
