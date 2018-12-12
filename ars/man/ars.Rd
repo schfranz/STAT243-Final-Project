@@ -23,5 +23,10 @@ ars(g, n, lb = -Inf, ub = Inf, batchSize = 100, randomState = 1)
 Samples from target density
 }
 \description{
-This function is a statistical algorithm for generating samples from #' a univariate, log-concave density.
+This function is a statistical algorithm for generating samples from 
+a univariate, log-concave density.
+}
+\examples{
+g <- function(x) dnorm(x,0,1) 
+ars(g, 5000, 2, 6, 100)
 }
