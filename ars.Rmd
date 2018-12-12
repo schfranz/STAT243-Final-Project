@@ -2,7 +2,7 @@
 title: "STAT243_final_project"
 author: "Jennifer Wiederspahn"
 date: "12/10/2018"
-output: word_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
@@ -27,39 +27,30 @@ Generally speaking, the algorithm can be divided up into the following steps: To
 *1. Main function*
 - main adaptive rejection sampling function
 - log of the original function
-- find starting x_k
+- find starting x_k using local maximum of 'h' function
 - initialize output variable
 - iterate until we have enough points
 - calculate h_k and derivative of h_k
-- intersection points
+- generate sample points from $s_k(x)$
+- carry out rejection test to determine whether we should accept these points and whether we should update these points into original $x_k$
 - cumulative envelop: Calculate areas under exponential upper bound function for normalization purposes, Normalize, Sampling: Generate seeds for Inverse CDF method, Rejection testing, update accpeted points to sample, update x_k
 
 *2. Supporting functions* 
 
-
 - generate intersect z_j
-
-
-- initialization: results are not bound, you just extend from -inf to +inf -> include to inf?
-- create upper hull in a vectorized fashion, take exponential
+- initialization: check different cases whether lb or ub is Inf and set different initialization - create upper hull in a vectorized fashion and take exponential of it for further sampling from inverse CDF.
 - create lower hull in a vectorized fashion
-- sample from the envelope
-- Sample from uniform random
-- Rescale sample value w to area of the selected segment, since area under segment is not equal to 1
-- Use inverse CDF of selected segment to generate a sample
-- rejection test: Generate random seed, squeeze and reject tests indicator for adding point in boolean form, get rejection point for squeeze and accept test
+- sample from the envelope $s_k(x)$ using inverse CDF.
+- Sample from uniform random distribution.
+- Rescale sample value w to area of the selected segment, since area under segment may not equal to 1. Besides, for those unnormalized distribution, this process will normalize it.
+- Use inverse CDF of selected segment to generate a sample.
+- rejection test: Generate random seed from uniform distribution, carry out squeeze and reject tests to filter sample points, return updateIndicator and acceptIndicator for adding and accepting points in boolean form.
 - Return boolean indicator whether to accept candidate sample point
-
-
-
-
-
-
- 
+- Update $x_k$ and sample points.
 
 *3. Testing*
 
-1. check whether f is positive in range from var_lower to var_upper
+- check whether f is positive in range from var_lower to var_upper
 - f is continuous
 - choose a test point in interval
 - check if the sign of boundary values differ
@@ -67,7 +58,15 @@ Generally speaking, the algorithm can be divided up into the following steps: To
 - if limit doesn't exist then we need to stop
 - check h(x) is concave
 - test for log-concavity
-- something to mention: the random number generator iterates over results after 626 unique values which can pose a problem if the user tries to generate a large sample size. We have noticed this but have not implemented a solution since
+- something to mention: the random number generator iterates over results after 626 unique values which can pose a problem if the user tries to generate a large sample size. We have noticed this but have not implemented a solution since it is default behaivor of R
+
+*4. Breaking Points*
+
+- when input g is not log-concave, continuous and differentiable.
+- when input arguments of ars() is not validate
+- when users input some extreme distribution, i.e. normal distribution with large mean, it will cause error using self-constructed 'cal_grad' function.
+- when input bounds are not validate, i.e. function is not differentiable and finite at some points between lower bound and upper bound.
+
 
 ### Repository Location and User Instructions
 
@@ -89,7 +88,7 @@ ars(g, 5000, 2, 6, 100)
 
 ### Contributions
 
-*Weijie Yuan:*
+*Weijie Yuan:* main function, supporting functions and some test samples.
 *Franziska Schmidt:*
 *Jennifer Wiederspahn:* R package and report writing
 
