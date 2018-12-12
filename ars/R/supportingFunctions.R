@@ -1,9 +1,18 @@
 #supporting functions (might want to make one .R script per function in package)
-library(rootSolve)
 
+# calculate derivative of a function
+# instead of "grad"
+cal_grad = function(x, f, lower=x-0.001, upper=x+0.001, ...) {
+  eps <- (.Machine$double.eps)^(1/4)
+  d <- numeric(0)
+  if (x==lower) d <- (f(x + eps, ...) - f(x, ...))/eps
+  else if (x==upper) d <-  (f(x, ...)- f (x - eps, ...))/eps
+  else if (lower <= x && x <= upper) d <- (f(x + eps, ...)-f(x - eps, ...))/(2*eps)
+  else stop("x is out of bounds.")
 
-h <- function(x){
-  return(log(g(x)))
+  # if limit doesn't exist then we need to stop
+  if(is.na(d) | is.infinite(d) | is.nan(d)) stop("The derivative does not exist.")
+  return(d)
 }
 
 # generate intersect zj
@@ -31,58 +40,54 @@ initialization_step <- function(h, lb, ub){
 
   # considering lb and ub is infinity
   # pre-set interval delta
-  if (lb==-Inf | ub==Inf){
-    maxPoint <- optim(par=0, f = h, method = "L-BFGS-B",
-                      lower = lb, upper = ub, control=list(fnscale=-1))$par
-    if (lb==-Inf & ub==Inf){
-      rightPoint <- maxPoint - 1
-      midPoint <- maxPoint
-      leftPoint <- maxPoint + 1
+  maxPoint <- optim(par=0, f = h, method = "L-BFGS-B",
+                    lower = lb, upper = ub, control=list(fnscale=-1))$par
+  if (lb==-Inf & ub==Inf){
+    leftPoint = maxPoint-1
+    rightPoint = maxPoint +1
+    midPoint = maxPoint
+  }
+  else if (lb == -Inf & ub!=Inf){
+    if (abs(maxPoint - ub)<1e-3){
+      leftPoint = maxPoint-1
+      rightPoint = maxPoint
+      midPoint = maxPoint-1/2
     }
-    else if (lb==-Inf & ub!=Inf) {
-      if (abs(maxPoint - ub) < 1e-5) {
-        rightPoint <- maxPoint
-        midPoint <- maxPoint - 1/2
-        leftPoint <- (maxPoint - 1)
-      }
-      else{
-        delta = (ub - maxPoint)/2
-        rightPoint <- maxPoint + delta
-        midPoint <- maxPoint
-        leftPoint <- (maxPoint - delta)
-      }
-    }
-    else if (lb!=-Inf & ub==Inf) {
-      if (abs(maxPoint - lb) < 1e-5) {
-        rightPoint <- maxPoint + 1
-        midPoint <- maxPoint + 1/2
-        leftPoint <- maxPoint
-      }
-      else{
-        delta = (maxPoint - lb)/2
-        rightPoint <- maxPoint + delta
-        midPoint <- maxPoint
-        leftPoint <- (maxPoint - delta)
-      }
+    else{
+      delta = abs(maxPoint-ub)
+      leftPoint = maxPoint-delta/2
+      rightPoint = maxPoint+delta/2
+      midPoint = maxPoint
     }
   }
-  else {
-    maxPoint <- optimize(f = h, interval = c(lb, ub),
-                         lower = lb, upper = ub, maximum = TRUE)$maximum
-    delta = (ub-lb)/2
-    # set three points
-    if (abs(maxPoint - ub) < 1e-5) {
+  else if (lb != -Inf & ub == Inf){
+    if (abs(maxPoint - lb)<1e-3){
+      leftPoint = maxPoint
+      rightPoint = maxPoint+1
+      midPoint = maxPoint+1/2
+    }
+    else{
+      delta = abs(maxPoint-lb)
+      leftPoint = maxPoint-delta/2
+      rightPoint = maxPoint+delta/2
+      midPoint = maxPoint
+    }
+  }
+  else{
+    delta <- (ub - lb)/2
+    #taking care of exp case
+    if (abs(maxPoint - ub) < 1e-3) {
       rightPoint <- maxPoint
-      midPoint <- maxPoint - delta/2
-      leftPoint <- (maxPoint - delta)
-    } else if (abs(maxPoint - lb) < 1e-5) {
-      rightPoint <- (maxPoint + delta)
-      midPoint <- maxPoint + delta/2
+      midPoint <- maxPoint - .5*delta
+      left_point <- max - delta
+    } else if (abs(maxPoint - lb) < 1e-3) {
+      rightPoint <- maxPoint + delta
+      midPoint <- maxPoint + .5*delta
       leftPoint <- maxPoint
     } else {
-      rightPoint <- (maxPoint + delta)
+      rightPoint <- maxPoint + .5*delta
+      leftPoint <- maxPoint - .5*delta
       midPoint <- maxPoint
-      leftPoint <- (maxPoint - delta)
     }
   }
 
@@ -140,7 +145,7 @@ draw_sample <- function(u, cumEnv, hk, xk, dhk, zk, portion){
 }
 
 # adaptive rejection test
-rejection_test <- function(x, hk, dhk, xk, zk){
+rejection_test <- function(x, h, hk, dhk, xk, zk){
 
   # Generate random sample from uniform distribution
   w = runif(1)
@@ -171,82 +176,3 @@ rejection_test <- function(x, hk, dhk, xk, zk){
   # and update these points to xk
   return(list(acceptIndicator = accept , UpdateIndicator = add))
 }
-
-#function that checks if input is integer (as in, a whole number, not whatever is.integer() is doing...)
-is.wholenumber <-	function(x, tol = .Machine$double.eps^0.5) {
-  abs(x - round(x)) < tol
-}
-
-# check whether f is positive in range from var_lower to var_upper
-# f is continuous
-check_f_positive = function(f, lower, upper) {
-  # choose a test point in interval
-  # may be more efficient
-  testPoint = min(upper, lower+1)
-  if (f(testPoint) < 0) {
-    return(FALSE)
-  }
-
-  # root
-  fLower <- f(lower)
-  fUpper <- f(upper)
-  # if the sign of boundary values differ
-  if(sign(fLower) != sign(fUpper)){
-    return(FALSE)
-  }
-
-  roots <- try(uniroot.all(Vectorize(f), lower = lower, upper = upper))
-  # if run error
-  if(class(roots)=="try-error"){
-    stop("Error in uniroot.all.")
-  }
-
-  # if no root in interval
-  if(length(roots)==0){
-    if(fLower>0) return(TRUE)
-    if(fLower <= 0) return(FALSE)
-  }
-  else{
-    rootP = roots + 1e-5
-    rootM = roots - 1e-5
-    if((sum(f(rootP)<0) == 0) & (sum(f(rootM)<0) == 0)){
-      return(TRUE)
-    }
-    return(FALSE)
-  }
-}
-
-# calculate derivative of a function
-# instead of "grad"
-cal_grad = function(x, f, lower=x-0.001, upper=x+0.001, ...) {
-  eps <- (.Machine$double.eps)^(1/4)
-  d <- numeric(0)
-  if (x==lower) d <- (f(x + eps, ...) - f(x, ...))/eps
-  else if (x==upper) d <-  (f(x, ...)- f (x - eps, ...))/eps
-  else if (lower <= x && x <= upper) d <- (f(x + eps, ...)-f(x - eps, ...))/(2*eps)
-  else stop("x is out of bounds.")
-
-  # if limit doesn't exist then we need to stop
-  if(is.na(d) | is.infinite(d) | is.nan(d)) stop("The derivative does not exist.")
-  return(d)
-}
-
-
-# check h(x) is concave
-check_concave = function(x, h) {
-  # x is x_k in main function
-  # h is log of g
-  if (length(x) != length(h)) {
-    stop("x and h should be of equal length.")
-  }
-  concave = TRUE
-  for (i in 1:(length(x)-2)) {
-    inter = h[i] + (x[i+1] - x[i]) * (h[i+2] - h[i])/(x[i+2] - x[i])
-    if (inter > h[i+1]) {
-      concave = FALSE
-      break
-    }
-  }
-  return(concave)
-}
-
