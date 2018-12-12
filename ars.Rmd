@@ -1,6 +1,6 @@
 ---
 title: "STAT243_final_project"
-author: "Jennifer Wiederspahn"
+author: "Weijie Yuan, Franziska Schmidt, Jennifer Wiederspahn"
 date: "12/10/2018"
 output: pdf_document
 ---
@@ -11,7 +11,8 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Adaptive Rejection Sampling
 
-STAT243 Fall 2018 Final Project
+*STAT243 Fall 2018 Final Project*
+
 Group members: Franziska Schmidt, Weijie Yuan, Jennifer Wiederspahn
 Github: schfranz
 
@@ -23,6 +24,7 @@ Generally speaking, the algorithm can be divided up into the following steps: To
 ### Approach 
 
 *1. Main function*
+
 - main adaptive rejection sampling function
 - log of the original function
 - find starting x_k using local maximum of 'h' function
@@ -60,7 +62,7 @@ Generally speaking, the algorithm can be divided up into the following steps: To
 
 *4. Breaking Points*
 
-- when input g is not log-concave, continuous and differentiable.
+- when input $g$ is not log-concave, continuous and differentiable.
 - when input arguments of ars() is not validate
 - when users input some extreme distribution, i.e. normal distribution with large mean, it will cause error using self-constructed 'cal_grad' function.
 - when input bounds are not validate, i.e. function is not differentiable and finite at some points between lower bound and upper bound.
@@ -82,9 +84,11 @@ This is an overview over the most relevant files and directories in the `ars` pa
         - supportingFunctions.R
     - inst/tests/
 		    - testthat/
-            - testArsInputs.R
-			      - testArsOutputs.R
-			      - testSuppFunctions.R
+		    
+		        - testArsInputs.R
+            + testArsInputs.R
+            + testArsOutputs.R
+			      + testSuppFunctions.R
 	  - man/
 		    - ars.Rd
 		
