@@ -9,28 +9,34 @@ output: word_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-A PDF document describing your solution, prepared in LATEX or R Markdown. The description
-does not need to be more than a few pages, but should describe the approach you took in terms of functions/modularity/object-oriented programming, and the testing that you carried out. It must include a paragraph describing the specific contributions of each team member and which person/people were responsible for each component of the work. Please submit a paper copy of the document to me - either directly to me, under my door, or in my mailbox. On your paper solution, please indicate the Github user name of the group member in whose Github account the final version of the project resides.
+## Adaptive Rejection Sampling
 
+STAT243 Fall 2018 Final Project
 Group members: Franziska Schmidt, Weijie Yuan, Jennifer Wiederspahn
 Github: schfranz
 
+### Introduction 
 
-check status with git status 
-Pull - edit, add, commit -m, push 
+Here, we describe a method for adaptive rejection sampling from any univariate log-concave probability density function. The method works without determination of the mode by making use of an envelope and a squeezing function which converge to the density $f(x)$ as sampling proceeds. The assumption of log-concavity of $f(x)$ avoids locating the supremum of $g(x)$. Furthermore, the probability of needing to evaluate $g(x)$ is further reduced by using the recently acquired information about g(x). Thus, the number of evaluations of $g(x)$ is reduced. For derivative based Adaptive Rejection Sampling, we assume that $g(x)$ is continuous and differentiable everywhere in domain D. $h(x) = ln g(x)$, s.t. $h(x)$ is concave everywhere in D. 
+Generally speaking, the algorithm can be divided up into the following steps: To initialize the sampling,  a set of fixed points is evaluated and the log-density $h$, as well as its derivative are evaluated on the fixed points. Next, these function evaluations are used to construct a piecewise-linear, upper bound h+ for the log-density function via supporting tangent lines of the log-density at the fixed points. Assuming that $g^{+} = exp(h^{+})$, sampling $Y ~ g^{+}$ is straightforward because $g6{+}$ is piecewise-exponential. More specifically, after having picked $U ~ Unif(0,1)$, $Y$ is accepted if $U \leq exp(h(Y) - h^{+}(Y))$. Otherwise, another sample is drawn from $g^{+}$ and the rejected $Y$ can be added to the initial set of fixed points and the piecewise-linear upper bound $h^{+}$ allowing for an adaptive update. 
 
-Here, we describe a method for adaptive rejection sampling from any univariate log-concave probability density function. The method works without determination of the mode by making use of an envelope and a squeezing function which converge to the density f(x) as sampling proceeds.
-To sample n points independently from f(x) by adaptive rejection sampling, perform the following initialization step, and then perform the following sampling and updating steps alternately until n points have been accepted
-Intro: 
--Establish a set of fixed points and evaluate the log-density, h, and derivative of the log-density on the fixed points.
--Use these function evaluations to construct a piecewise-linear, upper bound for the log-density function, h+, via supporting tangent lines of the log-density at the fixed points.
--Let g+=exp(h+). Because of the piecewise-linear construction of h+, g+ is piecewise-exponential, sampling Y∼g+ is straightforward.
--Pick U∼Unif(0,1). If U≤exp(h(Y)−h+(Y)), accept Y; else, draw another sample from g+.
--For any Y rejected by the above criteria, Y may be added to the initial set of fixed points and the piecewise-linear upper bound, h+, adaptively updated.
 
-Approach for functions
+### Approach 
 
-1. For supporting functions: 
+
+*1. Main function*
+- main adaptive rejection sampling function
+- log of the original function
+- find starting x_k
+- initialize output variable
+- iterate until we have enough points
+- calculate h_k and derivative of h_k
+- intersection points
+- cumulative envelop: Calculate areas under exponential upper bound function for normalization purposes, Normalize, Sampling: Generate seeds for Inverse CDF method, Rejection testing, update accpeted points to sample, update x_k
+
+*2. Supporting functions* 
+
+
 - generate intersect z_j
 
 
@@ -44,27 +50,14 @@ Approach for functions
 - rejection test: Generate random seed, squeeze and reject tests indicator for adding point in boolean form, get rejection point for squeeze and accept test
 - Return boolean indicator whether to accept candidate sample point
 
-2. Main function:
 
-#TODO: determine way to automatically set working directory to location of this file
 
-#source other scripts to load all necessary functions into the workspace; TODO: fail more gracefully if files aren't present
-source("arsFunction.R") #, local = TRUE, chdir = TRUE) <- other options for source() that could potentially help automatically setting working directory
-source("supportingFunctions.R")
-source("testFunctions.R")
-source("testSuite.R")
 
-- main adaptive rejection sampling function
-- log of the original function
-- find starting x_k
-- initialize output variable
-- iterate until we have enough points
-- calculate h_k and derivative of h_k
-- intersection points
-- cumulative envelop: Calculate areas under exponential upper bound function for normalization purposes, Normalize, Sampling: Generate seeds for Inverse CDF method, Rejection testing, update accpeted points to sample, update x_k
+
+
  
 
-Approach for testing
+*3. Testing*
 
 1. check whether f is positive in range from var_lower to var_upper
 - f is continuous
@@ -76,5 +69,9 @@ Approach for testing
 - test for log-concavity
 - something to mention: the random number generator iterates over results after 626 unique values which can pose a problem if the user tries to generate a large sample size. We have noticed this but have not implemented a solution since
 
-Contributions
+### Contributions
+
+*Weijie Yuan:*
+*Franziska Schmidt:*
+*Jennifer Wiederspahn:* R package and report writing
 
