@@ -1,16 +1,15 @@
 #main adaptive rejection sampling function
 #inputs:
-# -G(g?)			original function
-# -n					number of samples(?)
-# -lb					lower bound on x axis(?)
-# -ub					upper bound on x axis(?)
-# -mode				mode of g (useless?)
+# -g			    original function
+# -n					number of samples desired
+# -lb					lower bound on x axis
+# -ub					upper bound on x axis
 # -batchSize	number of seeds for inverse CDF
 
 ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100){
 
   #relevant libraries
-  library(assertthat)
+  #library(assertthat)
 
 	#check inputs
 	assert_that(!missing(g), !missing(n), msg = "Missing input arguments")

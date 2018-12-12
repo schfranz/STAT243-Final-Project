@@ -7,7 +7,7 @@ devtools::install_github('schfranz/STAT243-Final-Project/ars')
 library(ars)
 
 #load testing library
-library(testthat)
+library(testthat) #shouldn't be necessary once ars sets up other libraries properly?
 
 #see if ars() is visible and throws the expected error
 test_that("ars() can't be called with wrong number of inputs", {
