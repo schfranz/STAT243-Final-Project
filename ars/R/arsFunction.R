@@ -8,7 +8,7 @@
 # -mode				mode of g (useless?)
 # -batchSize	number of seeds for inverse CDF
 
-ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100){
+ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100, randomState=1){
 
   #relevant libraries
   library(assertthat)
@@ -21,6 +21,9 @@ ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100){
 	assertthat::assert_that(lb < ub, msg = "Lower bound must be smaller than upper bound")
 	assertthat::assert_that(is.numeric(batchSize), batchSize > 0, is.wholenumber(batchSize), msg = "batchSize must be a positive integer value")
 	assertthat::assert_that(batchSize < n, msg = "batchSize must be larger than number of samples n")
+
+	#set random seed
+	set.seed(randomState)
 
   #find starting xk
   xk <- initialization_step(h, lb, ub)
@@ -60,7 +63,7 @@ ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100){
 
     #Rejection testing
     testResult <- sapply(xSample, rejection_test,
-                         hk = hk, xk = xk,
+                         h = h, hk = hk, xk = xk,
                          dhk = dhk, zk = zk)
 
     keepSample <- testResult[1,]
@@ -69,7 +72,7 @@ ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100){
     # extract index of kept samples
     # update accpeted points to sample points
     keepX <- xSample[keepSample > 0]
-    newSample <- c(xKeep, newSample)
+    newSample <- c(keepX, newSample)
 
     # update xk
     # sort xk for the next iteration
@@ -89,7 +92,7 @@ ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100){
 # -ub					upper bound on x axis
 # -batchSize	number of seeds for inverse CDF
 
-ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100){
+ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100, randomState=1){
 
   #relevant libraries
   #library(assertthat)
@@ -102,6 +105,9 @@ ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100){
 	assert_that(lb < ub, msg = "Lower bound must be smaller than upper bound")
 	assert_that(is.numeric(batchSize), batchSize > 0, is.wholenumber(batchSize), msg = "batchSize must be a positive integer value")
 	assert_that(batchSize < n, msg = "batchSize must be larger than number of samples n")
+
+	#set random seed
+	set.seed(randomState)
 
   #find starting xk
   xk <- initialization_step(h, lb, ub)
@@ -141,7 +147,7 @@ ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100){
 
     #Rejection testing
     testResult <- sapply(xSample, rejection_test,
-                         hk = hk, xk = xk,
+                         h = h, hk = hk, xk = xk,
                          dhk = dhk, zk = zk)
 
     keepSample <- testResult[1,]
@@ -150,7 +156,7 @@ ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100){
     # extract index of kept samples
     # update accpeted points to sample points
     keepX <- xSample[keepSample > 0]
-    newSample <- c(xKeep, newSample)
+    newSample <- c(keepX, newSample)
 
     # update xk
     # sort xk for the next iteration

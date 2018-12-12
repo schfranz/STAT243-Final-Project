@@ -136,7 +136,7 @@ draw_sample <- function(u, cumEnv, hk, xk, dhk, zk, portion){
 }
 
 # adaptive rejection test
-rejection_test <- function(x, hk, dhk, xk, zk){
+rejection_test <- function(x, h, hk, dhk, xk, zk){
 
   # Generate random sample from uniform distribution
   w = runif(1)
