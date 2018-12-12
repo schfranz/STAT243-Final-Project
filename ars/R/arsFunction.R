@@ -51,7 +51,8 @@ ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100, randomState=1){
 
     # calculate hk and derivative of hk
     hk <- h(xk)
-    dhk <- sapply(xk,cal_grad,h)
+    dhk <- try(sapply(xk,cal_grad,h), silent=TRUE)
+    if(class(dhk)=="try-error") stop("Error calculating derivative. Try reasonable lower bound or upper bound.")
 
     #intersection points of upper envelope
     zk <- generate_intersect(hk,dhk,xk,lb,ub)
