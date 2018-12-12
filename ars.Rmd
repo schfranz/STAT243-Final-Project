@@ -17,12 +17,10 @@ Github: schfranz
 
 ### Introduction 
 
-Here, we describe a method for adaptive rejection sampling from any univariate log-concave probability density function. The method works without determination of the mode by making use of an envelope and a squeezing function which converge to the density $f(x)$ as sampling proceeds. The assumption of log-concavity of $f(x)$ avoids locating the supremum of $g(x)$. Furthermore, the probability of needing to evaluate $g(x)$ is further reduced by using the recently acquired information about g(x). Thus, the number of evaluations of $g(x)$ is reduced. For derivative based Adaptive Rejection Sampling, we assume that $g(x)$ is continuous and differentiable everywhere in domain D. $h(x) = ln g(x)$, s.t. $h(x)$ is concave everywhere in D. 
-Generally speaking, the algorithm can be divided up into the following steps: To initialize the sampling,  a set of fixed points is evaluated and the log-density $h$, as well as its derivative are evaluated on the fixed points. Next, these function evaluations are used to construct a piecewise-linear, upper bound h+ for the log-density function via supporting tangent lines of the log-density at the fixed points. Assuming that $g^{+} = exp(h^{+})$, sampling $Y ~ g^{+}$ is straightforward because $g6{+}$ is piecewise-exponential. More specifically, after having picked $U ~ Unif(0,1)$, $Y$ is accepted if $U \leq exp(h(Y) - h^{+}(Y))$. Otherwise, another sample is drawn from $g^{+}$ and the rejected $Y$ can be added to the initial set of fixed points and the piecewise-linear upper bound $h^{+}$ allowing for an adaptive update. 
-
+Here, we describe a method for adaptive rejection sampling from any univariate log-concave probability density function based on Gilks et al. (1992). The method works without determination of the mode by making use of an envelope and a squeezing function which converge to the underlying density $f(x)$ as sampling proceeds. The assumption of log-concavity of $f(x)$ avoids locating the supremum of the (possibly unnormalized) input function $g(x)$, where $g(x) = cf(x)$. In addition, the need to evaluate $g(x)$ is reduced by using the recently acquired information about $g(x)$, thus reducing the number of evaluations of $g(x)$ even further. For derivative-based Adaptive Rejection Sampling, we assume that $g(x)$ is continuous and differentiable everywhere in domain $D$ and that $h(x) = ln g(x)$ exists, s.t. $h(x)$ is concave everywhere in $D$.
+Generally speaking, the algorithm can be divided up into the following steps: To initialize the sampling, a set of fixed points is evaluated and the log-density $h(x)$, as well as its derivative are evaluated on the fixed points. Next, these function evaluations are used to construct a piecewise-linear, upper bound $h^+$ for the log-density function via supporting tangent lines of the log-density at the fixed points. Assuming that $g^{+} = exp(h^{+})$, sampling $Y ~ g^{+}$ is straightforward because $g^{+}$ is piecewise-exponential. More specifically, after having picked $U ~ Unif(0,1)$, $Y$ is accepted if $U \leq exp(h(Y) - h^{+}(Y))$. Otherwise, another sample is drawn from $g^{+}$ and the rejected $Y$ can be added to the initial set of fixed points and the piecewise-linear upper bound $h^{+}$, allowing for an adaptive update. 
 
 ### Approach 
-
 
 *1. Main function*
 - main adaptive rejection sampling function
@@ -74,21 +72,28 @@ The ars package resides in the Github repository "schfranz/ars" and can be insta
 
 The development repository is called "schfranz/STAT243-Final-Project" if you are interested.
 
-#make package available
-library(ars)
+### Package Overview
 
-#load testing library
-library(testthat) #shouldn't be necessary once ars sets up other libraries properly?
+This is an overview over the most relevant files and directories in the `ars` package:
 
-
-#do a proper run with ars() that should work
-g <- function(x) dnorm(x,0,1)
-ars(g, 5000, 2, 6, 100)
-
+- ars/
+    - R/
+        - arsFunction.R
+        - supportingFunctions.R
+    - inst/tests/
+		    - testthat/
+            - testArsInputs.R
+			      - testArsOutputs.R
+			      - testSuppFunctions.R
+	  - man/
+		    - ars.Rd
+		
+The package directory `ars` contains three relevant folders: `R`, which contains the main function and supporting functions, `inst`, which forces the installation of all tests contained in `tests/testthat`, and `man`, which contains information for the package's help functions.
 
 ### Contributions
 
-*Weijie Yuan:* main function, supporting functions and some test samples.
-*Franziska Schmidt:*
+*Weijie Yuan:* main function, supporting functions and some test samples
+*Franziska Schmidt:* Github support, unit testing
 *Jennifer Wiederspahn:* R package and report writing
 
+All team members contributed to the development of their own and other member's parts via Slack and during meetings.
