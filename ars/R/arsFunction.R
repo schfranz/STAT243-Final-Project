@@ -23,8 +23,6 @@
 
 ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100, randomState=1){
 
-
-
 	#check inputs
   assertthat::assert_that(!missing(g), !missing(n), msg = "Missing input arguments")
   assertthat::assert_that(length(n) == 1, length(lb) == 1, length(ub) == 1, length(batchSize) == 1, msg = "Inputs for n, lb, ub, and batchSize must be single numeric values")
@@ -96,8 +94,6 @@ ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100, randomState=1){
     keepX <- xSample[keepSample > 0]
     newSample <- c(keepX, newSample)
 
-    print(length(xk))
-    print(length(hk))
     
     # check for log-concavity of function
     assertthat::assert_that(check_concave(xk, hk), msg = "The provided function appears to be non-log-concave in parts of the domain. ars() can only draw samples from log-concave functions.")
@@ -106,9 +102,6 @@ ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100, randomState=1){
     # sort xk for the next iteration
     xkUpdated = xSample[add2xk > 0]
     xk = sort(c(xk, xkUpdated))
-    
-    print(length(xk))
-    print(length(hk))
   }
   return(newSample[1:n])
 }
