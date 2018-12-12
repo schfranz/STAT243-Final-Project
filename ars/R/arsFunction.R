@@ -6,14 +6,27 @@
 # -ub						upper bound on x axis
 # -batchSize		number of seeds for inverse CDF
 # -randomState	seed for set.Seed()
+#' Adaptive Rejection Sampling
+#'
+#' This function is a statistical algorithm for generating samples from #' a univariate, log-concave density.
+#'
+#' @param G original function
+#' @param n number of samples
+#' @param lb lower bound on x axis
+#' @param ub upper bound on x axis
+#' @param batchSize number of seeds for inverse CDF, default = 100
+#' @param randomState seed for set.seed()
+#' @return Samples from target density
+#' @example
+#’ g <- function(x) dnorm(x,0,1)
+#’ ars(g, 5000, 2, 6, 100)
 
 ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100, randomState=1){
 
-  #relevant libraries
-  library(assertthat)
+
 
 	#check inputs
-  assert_that(!missing(g), !missing(n), msg = "Missing input arguments")
+  asserthat::assert_that(!missing(g), !missing(n), msg = "Missing input arguments")
   assertthat::assert_that(length(n) == 1, length(lb) == 1, length(ub) == 1, length(batchSize) == 1, msg = "Inputs for n, lb, ub, and batchSize must be single numeric values")
   assertthat::assert_that(is.function(g), msg = "g must be a function input")
   assertthat::assert_that(is.numeric(n), n > 0, is.wholenumber(n), msg = "n must be a positive integer value")
