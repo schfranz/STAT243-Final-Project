@@ -20,7 +20,6 @@ ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100, randomState=1){
   assertthat::assert_that(is.numeric(lb), is.numeric(ub), msg = "upper and lower bound must be numeric values")
   assertthat::assert_that(lb < ub, msg = "Lower bound must be smaller than upper bound")
   assertthat::assert_that(is.numeric(batchSize), batchSize > 0, is.wholenumber(batchSize), msg = "batchSize must be a positive integer value")
-  assertthat::assert_that(batchSize < n, msg = "batchSize must be larger than number of samples n")
 
 	#set random seed
 	set.seed(randomState)
