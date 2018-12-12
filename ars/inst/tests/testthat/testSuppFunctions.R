@@ -1,7 +1,42 @@
 #unit tests for supporting functions
 
 
+#test generate_intersect()
 
-#not sure what this is
-# assert normal density
-assertthat::assert_that(check_f_positive(dnorm,-100,100))
+
+#test initialization_step()
+
+
+#test upper_hull()
+
+
+#test exp_upper_hull()
+
+
+#test lower_hull()
+
+
+#test draw_sample()
+
+
+#test rejection_test()
+
+
+#test is.wholenumber()
+test_that("is.wholenumber() returns FALSE for non-integers", {
+	expect_equal(is.wholenumber(2.3), FALSE)
+	expect_equal(is.wholenumber(4), TRUE)
+	expect_equal(is.wholenumber(3.0003, tol = 0.0001), FALSE)
+	expect_equal(is.wholenumber(3.0003, tol = 0.001), TRUE)
+})
+
+
+#test check_f_positive()
+
+
+#test cal_grad()
+
+
+#test check_concave()
+
+
