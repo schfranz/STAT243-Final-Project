@@ -20,3 +20,7 @@ ars(g, 5000, 2, 6, 100)
 
 #run testing suite
 test_package('ars')
+
+#test help functionality
+?ars
+help('ars')
