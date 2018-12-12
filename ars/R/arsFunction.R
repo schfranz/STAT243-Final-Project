@@ -31,7 +31,7 @@ ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100, randomState=1){
 	}
 
   #find starting xk
-  xk <- initialization_step(h, lb, ub)
+  xk <- initialization_step(g, lb, ub)
 
   #initialize output variable
   newSample <- NULL
