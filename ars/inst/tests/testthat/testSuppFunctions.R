@@ -48,8 +48,15 @@ test_that("is.wholenumber() returns FALSE for non-integers", {
 
 
 #test check_f_positive()
-
+test_that("check_f_positive() returns TRUE for positive function", {
+  expect_equal(check_f_positive(exp,0,1), TRUE)
+  expect_equal(check_f_positive(dnorm,-1e8,1e8), TRUE)
+})
 
 #test check_concave()
-
+test_that("check_concave returns TRUE for non-concave", {
+  expect_equal(check_concave(c(1,2,3),c(2,3,4)), TRUE)
+  expect_equal(check_concave(c(-1,0,1),c(1,3,1)), TRUE)
+  expect_equal(check_concave(c(-1,0,1),c(1,-3,1)), FALSE)
+})
 
