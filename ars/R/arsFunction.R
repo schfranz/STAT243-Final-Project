@@ -26,7 +26,7 @@ ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100, randomState=1){
 
 
 	#check inputs
-  asserthat::assert_that(!missing(g), !missing(n), msg = "Missing input arguments")
+  assertthat::assert_that(!missing(g), !missing(n), msg = "Missing input arguments")
   assertthat::assert_that(length(n) == 1, length(lb) == 1, length(ub) == 1, length(batchSize) == 1, msg = "Inputs for n, lb, ub, and batchSize must be single numeric values")
   assertthat::assert_that(is.function(g), msg = "g must be a function input")
   assertthat::assert_that(is.numeric(n), n > 0, is.wholenumber(n), msg = "n must be a positive integer value")
