@@ -1,7 +1,13 @@
 #unit tests for supporting functions
 
-#test cal_grad()
+#variables needed for tests
+g <- function(x) dnorm(x,0,1) #normal distribution as function input
 
+#test cal_grad()
+testthat::test_that("cal_grad() returns an appropriate derivative", {
+	expect_equal(cal_grad(0, g), 0)
+	expect_equal(cal_grad(0.5*pi, sin), 0)
+})
 
 #test generate_intersect()
 

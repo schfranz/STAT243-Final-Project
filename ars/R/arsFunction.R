@@ -12,7 +12,7 @@
 #' a univariate, log-concave density.
 #'
 
-#' @param g original function
+#' @param G original function
 #' @param n number of samples
 #' @param lb lower bound on x axis
 #' @param ub upper bound on x axis
