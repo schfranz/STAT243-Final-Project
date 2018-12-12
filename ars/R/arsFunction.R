@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #main adaptive rejection sampling function
 #inputs:
 # -G(g?)			original function
@@ -167,4 +166,3 @@ ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100, randomState=1){
   }
   return(newSample[1:n])
 }
->>>>>>> 85ab8fe124e240edf9a2c1f96072b2af6b0faf3b
