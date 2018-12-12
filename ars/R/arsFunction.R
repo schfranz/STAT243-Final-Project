@@ -96,13 +96,19 @@ ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100, randomState=1){
     keepX <- xSample[keepSample > 0]
     newSample <- c(keepX, newSample)
 
+    print(length(xk))
+    print(length(hk))
+    
+    # check for log-concavity of function
+    assertthat::assert_that(check_concave(xk, hk), msg = "The provided function appears to be non-log-concave in parts of the domain. ars() can only draw samples from log-concave functions.")
+    
     # update xk
     # sort xk for the next iteration
     xkUpdated = xSample[add2xk > 0]
     xk = sort(c(xk, xkUpdated))
     
-    # check for log-concavity of function
-    assertthat::assert_that(check_concave(xk, hk), msg = "The provided function appears to be non-log-concave in parts of the domain. ars() can only draw samples from log-concave functions.")
+    print(length(xk))
+    print(length(hk))
   }
   return(newSample[1:n])
 }
