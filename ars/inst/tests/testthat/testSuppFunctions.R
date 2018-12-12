@@ -23,11 +23,11 @@
 
 
 #test is.wholenumber()
-test_that("is.wholenumber() returns FALSE for non-integers", {
-	expect_equal(is.wholenumber(2.3), FALSE)
-	expect_equal(is.wholenumber(4), TRUE)
-	expect_equal(is.wholenumber(3.0003, tol = 0.0001), FALSE)
-	expect_equal(is.wholenumber(3.0003, tol = 0.001), TRUE)
+testthat::test_that("is.wholenumber() returns FALSE for non-integers", {
+  testthat::expect_equal(is.wholenumber(2.3), FALSE)
+  testthat::expect_equal(is.wholenumber(4), TRUE)
+  testthat::expect_equal(is.wholenumber(3.0003, tol = 0.0001), FALSE)
+  testthat::expect_equal(is.wholenumber(3.0003, tol = 0.001), TRUE)
 })
 
 
