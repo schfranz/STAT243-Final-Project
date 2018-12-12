@@ -82,7 +82,7 @@ ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100, randomState=1){
   }
   return(newSample[1:n])
 }
-=======
+
 #main adaptive rejection sampling function
 #inputs:
 # -g			    original function
