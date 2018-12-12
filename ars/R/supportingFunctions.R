@@ -1,5 +1,5 @@
 #supporting functions (might want to make one .R script per function in package)
-library(rootSolve)
+#library(rootSolve)
 
 
 h <- function(x){
