@@ -52,7 +52,7 @@ ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100, randomState=1){
     # calculate hk and derivative of hk
     hk <- h(xk)
     dhk <- try(sapply(xk,cal_grad,h), silent=TRUE)
-    if(class(dhk)=="try-error") stop("Error calculating derivative. Try reasonable lower bound or upper bound.")
+    if(class(dhk)=="try-error") stop("Error in calculating derivative. Try reasonable lower bound or upper bound.")
 
     #intersection points of upper envelope
     zk <- generate_intersect(hk,dhk,xk,lb,ub)
@@ -83,9 +83,13 @@ ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100, randomState=1){
     xSample <- na.omit(xSample)
     
     #Rejection testing
-    testResult <- sapply(xSample, rejection_test,
+    testResult <- try(sapply(xSample, rejection_test,
                          h = h, hk = hk, xk = xk,
-                         dhk = dhk, zk = zk)
+                         dhk = dhk, zk = zk), silent=TRUE)
+    ### detect some error
+    if(class(testResult)=="try-error") {
+      stop("Error in calculating integrate. Try reasonable and log-concave density.")}
+    
 
     keepSample <- testResult[1,]
     add2xk <- testResult[2,]
