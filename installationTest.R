@@ -1,7 +1,7 @@
 #check that package can be installed and runs properly
 
 #get package from github; should print a bunch of stuff
-devtools::install_github('schfranz/STAT243-Final-Project/ars')
+devtools::install_github('schfranz/STAT243-Final-Project/ars', force = TRUE)
 
 #make package available
 library(ars)
