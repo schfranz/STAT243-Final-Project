@@ -23,7 +23,7 @@ testthat::test_that("test with gamma(2,2) distribution", {
 testthat::test_that("test with dchisq(3) distribution", {
 	f <- function(x) dchisq(x, 3)
 	samples <- ars(f, 1000, 0, Inf)
-	p <- ks.test(samples, 'pbeta', 2, 2)
+	p <- ks.test(samples, 'pchisq', 3)
 	testthat::expect_gte(p$p.value, 0.1)
 })
 
@@ -41,7 +41,7 @@ testthat::test_that("test with default Cauchy distribution", {
 
 testthat::test_that("test with default log-normal distribution", {
 	f <- function(x) dlnorm(x)
-	testthat::expect_error(ars(f, 1000, 0, 10), "non-log-concave")
+	testthat::expect_error(ars(f, 1000, 0, 10), "Error calculating derivative")
 })
 
 testthat::test_that("test with chi-squared distribution with 1 degree of freedom", {
