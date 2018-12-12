@@ -17,3 +17,6 @@ test_that("ars() can't be called with wrong number of inputs", {
 #do a proper run with ars() that should work
 g <- function(x) dnorm(x,0,1)
 ars(g, 5000, 2, 6, 100)
+
+#run testing suite
+test_package('ars')
