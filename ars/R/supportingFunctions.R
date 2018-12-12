@@ -12,7 +12,7 @@ generate_intersect <- function(hk, dhk, xk, lb, ub){
   xkl <- c(xk,0); xko <- c(0,xk)
   hkl <- c(hk,0); hko <- c(0,hk)
   dhkl <- c(dhk,0); dhko <- c(0,dhk)
-  
+
   # compute zj
   zj <- (hkl-hko-xkl*dhkl+xko*dhko)/(dhko-dhkl)
   # set starting point and ending point
@@ -26,13 +26,13 @@ generate_intersect <- function(hk, dhk, xk, lb, ub){
 
 # initialization
 initialization_step <- function(h, lb, ub){
-  
+
   # considering lb and ub is infinity
   # pre-set interval delta
   if (lb==-Inf | ub==Inf){
-    maxPoint <- optim(par=0, f = h, method = "L-BFGS-B", 
+    maxPoint <- optim(par=0, f = h, method = "L-BFGS-B",
                       lower = lb, upper = ub, control=list(fnscale=-1))$par
-    if (lb==-Inf & ub==Inf){ 
+    if (lb==-Inf & ub==Inf){
       rightPoint <- maxPoint - 1
       midPoint <- maxPoint
       leftPoint <- maxPoint + 1
@@ -65,7 +65,7 @@ initialization_step <- function(h, lb, ub){
     }
   }
   else {
-    maxPoint <- optimize(f = h, interval = c(lb, ub), 
+    maxPoint <- optimize(f = h, interval = c(lb, ub),
                          lower = lb, upper = ub, maximum = TRUE)$maximum
     delta = (ub-lb)/2
     # set three points
@@ -83,7 +83,7 @@ initialization_step <- function(h, lb, ub){
       leftPoint <- (maxPoint - delta)
     }
   }
-  
+
   init <- c(leftPoint, midPoint, rightPoint)
   return(init)
 }
@@ -117,20 +117,20 @@ lower_hull <- function(x,hk,dhk,xk){
 
 # sample from the envelope
 draw_sample <- function(u, cumEnv, hk, xk, dhk, zk, portion){
-  
+
   j <- max(which(u > cumEnv))
-  
+
   if(dhk[j] == 0){
     x <- runif(1, zk[j],zk[j+1])
     return(x)
   } else {
-    
+
     # Sample from uniform random
     w = runif(1)
-    
+
     # Rescale sample value w to area of the selected segment
     wRescale = w/portion[j]*exp(hk[j] - xk[j]*dhk[j])*(exp(dhk[j]*zk[j+1]) -exp(dhk[j]*zk[j]))
-    
+
     # Use inverse CDF of selected segment to generate a sample
     x = (1/dhk[j])*log(wRescale*portion[j]/(exp(hk[j] - xk[j]*dhk[j])) + exp(zk[j]*dhk[j]))
   }
@@ -139,17 +139,17 @@ draw_sample <- function(u, cumEnv, hk, xk, dhk, zk, portion){
 
 # adaptive rejection test
 rejection_test <- function(x, hk, dhk, xk, zk){
-  
+
   # Generate random sample from uniform distribution
   w = runif(1)
-  
+
   # squeeze and reject tests indicator for adding point in boolean form
   accept = FALSE
   add = FALSE
-  
+
   # get rejection point for squeeze and accept test
   lowerTest = exp(lower_hull(x,hk,dhk,xk) - upper_hull(x,hk,dhk,xk,zk))
-  
+
   # check if we need to keep sample points
   # check if we need to add new points to xk
   # kernel test
@@ -164,8 +164,13 @@ rejection_test <- function(x, hk, dhk, xk, zk){
       accept = FALSE
     }
   }
-  
+
   # Return boolean indicator whether to accept candidate sample point
   # and update these points to xk
   return(list(acceptIndicator = accept , UpdateIndicator = add))
+}
+
+#function that checks if input is integer (as in, a whole number, not whatever is.integer() is doing...)
+is.wholenumber <-	function(x, tol = .Machine$double.eps^0.5) {
+  abs(x - round(x)) < tol
 }

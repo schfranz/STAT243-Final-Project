@@ -10,7 +10,7 @@ check_f_positive = function(f, lower, upper) {
   if (f(testPoint) < 0) {
     return(FALSE)
   }
-  
+
   # root
   fLower <- f(lower)
   fUpper <- f(upper)
@@ -18,13 +18,13 @@ check_f_positive = function(f, lower, upper) {
   if(sign(fLower) != sign(fUpper)){
     return(FALSE)
   }
-  
-  roots <- try(uniroot.all(Vectorize(f), lower = lower, upper = upper)) 
+
+  roots <- try(uniroot.all(Vectorize(f), lower = lower, upper = upper))
   # if run error
   if(class(roots)=="try-error"){
     stop("Error in uniroot.all.")
   }
-  
+
   # if no root in interval
   if(length(roots)==0){
     if(fLower>0) return(TRUE)
@@ -49,7 +49,7 @@ cal_grad = function(x, f, lower=x-0.001, upper=x+0.001, ...) {
   else if (x==upper) d <-  (f(x, ...)- f (x - eps, ...))/eps
   else if (lower <= x && x <= upper) d <- (f(x + eps, ...)-f(x - eps, ...))/(2*eps)
   else stop("x is out of bounds.")
-  
+
   # if limit doesn't exist then we need to stop
   if(is.na(d) | is.infinite(d) | is.nan(d)) stop("The derivative does not exist.")
   return(d)
@@ -57,7 +57,7 @@ cal_grad = function(x, f, lower=x-0.001, upper=x+0.001, ...) {
 
 
 # check h(x) is concave
-check_concave = function(x, h) { 
+check_concave = function(x, h) {
   # x is x_k in main function
   # h is log of g
   if (length(x) != length(h)) {
@@ -65,16 +65,11 @@ check_concave = function(x, h) {
   }
   concave = TRUE
   for (i in 1:(length(x)-2)) {
-    inter = h[i] + (x[i+1] - x[i]) * (h[i+2] - h[i])/(x[i+2] - x[i]) 
+    inter = h[i] + (x[i+1] - x[i]) * (h[i+2] - h[i])/(x[i+2] - x[i])
     if (inter > h[i+1]) {
       concave = FALSE
       break
     }
   }
   return(concave)
-}
-
-#function that checks if input is integer (as in, a whole number, not whatever is.integer() is doing...)
-is.wholenumber <-	function(x, tol = .Machine$double.eps^0.5) {
-	abs(x - round(x)) < tol
 }
