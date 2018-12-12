@@ -8,6 +8,10 @@ Our slack: https://stats-pros.slack.com/messages/CECQRSD8Q/
 * Make package available with 'library(ars)'
 * Call 'ars()' according to examples provided in help
 
+## How to test
+* In RStudio (and probably also on the console), set working directory to location of ars folder
+* Run 'devtools::test()'
+
 ## TODO
 *
 
