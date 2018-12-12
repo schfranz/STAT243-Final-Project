@@ -12,3 +12,5 @@ LazyData: true
 Suggests: testthat
 NeedsCompilation: no
 Packaged: 2018-12-11 23:49:09 UTC; Franziska Schmidt
+Imports: 
+    assertthat
