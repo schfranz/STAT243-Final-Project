@@ -1,17 +1,16 @@
 #main adaptive rejection sampling function
 #inputs:
-# -g			    original function
-# -n					number of samples desired
-# -lb					lower bound on x axis
-# -ub					upper bound on x axis
-# -batchSize	number of seeds for inverse CDF
+# -g			    	original function
+# -n						number of samples desired
+# -lb						lower bound on x axis
+# -ub						upper bound on x axis
+# -batchSize		number of seeds for inverse CDF
+# -randomState	seed for set.Seed()
 
 ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100, randomState=1){
 
   #relevant libraries
   library(assertthat)
-
-  wtf <- 8
 
 	#check inputs
   assert_that(!missing(g), !missing(n), msg = "Missing input arguments")
@@ -25,6 +24,11 @@ ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100, randomState=1){
 
 	#set random seed
 	set.seed(randomState)
+	
+	# take log
+	h <- function(x){
+		return(log(g(x)))
+	}
 
   #find starting xk
   xk <- initialization_step(h, lb, ub)
@@ -41,28 +45,32 @@ ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100, randomState=1){
 
     #intersection points of upper envelope
     zk <- generate_intersect(hk,dhk,xk,lb,ub)
-
+    
     #cumulative envelope
     #Calculate areas under exponential upper bound function for normalization purposes
     portion <-  unlist(sapply(2:length(zk),
-                              function(i){integrate(Vectorize(exp_upper_hull,vectorize.args =c("x")),
-                                                    zk[i-1],zk[i],hk,dhk,xk,zk)})[1,])
-
+    													function(i){integrate(Vectorize(exp_upper_hull,vectorize.args =c("x")),
+    																								zk[i-1],zk[i],hk,dhk,xk,zk)})[1,])
+    
     cum <- sum(portion)
-
+    
     # Normalize and cumulation
     envelop <- portion/cum
     cumEnv <- cumsum(envelop)
     cumEnv <- c(0,cumEnv)
-
+    
     # Sampling: Generate seeds for Inverse CDF method
     # Generate random seeds
     seeds <- runif(batchSize)
     xSample <- sapply(seeds, draw_sample,
-                      cumEnv = cumEnv, hk = hk,
-                      xk = xk, dhk = dhk,
-                      zk = zk,portion = portion)
-
+    									cumEnv = cumEnv, hk = hk,
+    									xk = xk, dhk = dhk,
+    									zk = zk,portion = portion)
+  
+    # drop nan
+    # not affect random
+    xSample <- na.omit(xSample)
+    
     #Rejection testing
     testResult <- sapply(xSample, rejection_test,
                          h = h, hk = hk, xk = xk,

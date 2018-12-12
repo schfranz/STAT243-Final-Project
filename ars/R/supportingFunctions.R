@@ -1,9 +1,19 @@
 #supporting functions (might want to make one .R script per function in package)
 #library(rootSolve)
 
-
-h <- function(x){
-  return(log(g(x)))
+# calculate derivative of a function
+# instead of "grad"
+cal_grad = function(x, f, lower=x-0.001, upper=x+0.001, ...) {
+  eps <- (.Machine$double.eps)^(1/4)
+  d <- numeric(0)
+  if (x==lower) d <- (f(x + eps, ...) - f(x, ...))/eps
+  else if (x==upper) d <-  (f(x, ...)- f (x - eps, ...))/eps
+  else if (lower <= x && x <= upper) d <- (f(x + eps, ...)-f(x - eps, ...))/(2*eps)
+  else stop("x is out of bounds.")
+  
+  # if limit doesn't exist then we need to stop
+  if(is.na(d) | is.infinite(d) | is.nan(d)) stop("The derivative does not exist.")
+  return(d)
 }
 
 # generate intersect zj
@@ -28,64 +38,61 @@ generate_intersect <- function(hk, dhk, xk, lb, ub){
 
 # initialization
 initialization_step <- function(h, lb, ub){
-
+  
   # considering lb and ub is infinity
   # pre-set interval delta
-  if (lb==-Inf | ub==Inf){
-    maxPoint <- optim(par=0, f = h, method = "L-BFGS-B",
-                      lower = lb, upper = ub, control=list(fnscale=-1))$par
-    if (lb==-Inf & ub==Inf){
-      rightPoint <- maxPoint - 1
-      midPoint <- maxPoint
-      leftPoint <- maxPoint + 1
+  maxPoint <- optim(par=0, f = h, method = "L-BFGS-B", 
+                    lower = lb, upper = ub, control=list(fnscale=-1))$par
+  if (lb==-Inf & ub==Inf){
+    leftPoint = maxPoint-1
+    rightPoint = maxPoint +1
+    midPoint = maxPoint
+  }
+  else if (lb == -Inf & ub!=Inf){
+    if (abs(maxPoint - ub)<1e-3){
+      leftPoint = maxPoint-1
+      rightPoint = maxPoint
+      midPoint = maxPoint-1/2
     }
-    else if (lb==-Inf & ub!=Inf) {
-      if (abs(maxPoint - ub) < 1e-5) {
-        rightPoint <- maxPoint
-        midPoint <- maxPoint - 1/2
-        leftPoint <- (maxPoint - 1)
-      }
-      else{
-        delta = (ub - maxPoint)/2
-        rightPoint <- maxPoint + delta
-        midPoint <- maxPoint
-        leftPoint <- (maxPoint - delta)
-      }
-    }
-    else if (lb!=-Inf & ub==Inf) {
-      if (abs(maxPoint - lb) < 1e-5) {
-        rightPoint <- maxPoint + 1
-        midPoint <- maxPoint + 1/2
-        leftPoint <- maxPoint
-      }
-      else{
-        delta = (maxPoint - lb)/2
-        rightPoint <- maxPoint + delta
-        midPoint <- maxPoint
-        leftPoint <- (maxPoint - delta)
-      }
+    else{
+      delta = abs(maxPoint-ub)
+      leftPoint = maxPoint-delta/2
+      rightPoint = maxPoint+delta/2
+      midPoint = maxPoint
     }
   }
-  else {
-    maxPoint <- optimize(f = h, interval = c(lb, ub),
-                         lower = lb, upper = ub, maximum = TRUE)$maximum
-    delta = (ub-lb)/2
-    # set three points
-    if (abs(maxPoint - ub) < 1e-5) {
+  else if (lb != -Inf & ub == Inf){
+    if (abs(maxPoint - lb)<1e-3){
+      leftPoint = maxPoint
+      rightPoint = maxPoint+1
+      midPoint = maxPoint+1/2
+    }
+    else{
+      delta = abs(maxPoint-lb)
+      leftPoint = maxPoint-delta/2
+      rightPoint = maxPoint+delta/2
+      midPoint = maxPoint
+    }
+  }
+  else{
+    if (abs(maxPoint - ub) < 1e-3) {
+      delta <- abs(maxPoint-lb)/2
       rightPoint <- maxPoint
-      midPoint <- maxPoint - delta/2
-      leftPoint <- (maxPoint - delta)
-    } else if (abs(maxPoint - lb) < 1e-5) {
-      rightPoint <- (maxPoint + delta)
-      midPoint <- maxPoint + delta/2
+      midPoint <- maxPoint - .5*delta
+      left_point <- max - delta
+    } else if (abs(maxPoint - lb) < 1e-3) {
+      delta <- abs(maxPoint-ub)/2
+      rightPoint <- maxPoint + delta
+      midPoint <- maxPoint + .5*delta
       leftPoint <- maxPoint
     } else {
-      rightPoint <- (maxPoint + delta)
+      delta <- min(abs(maxPoint-lb),abs(maxPoint-ub))/2
+      rightPoint <- maxPoint + .5*delta
+      leftPoint <- maxPoint - .5*delta
       midPoint <- maxPoint
-      leftPoint <- (maxPoint - delta)
     }
   }
-
+  
   init <- c(leftPoint, midPoint, rightPoint)
   return(init)
 }
@@ -140,7 +147,7 @@ draw_sample <- function(u, cumEnv, hk, xk, dhk, zk, portion){
 }
 
 # adaptive rejection test
-rejection_test <- function(x, hk, dhk, xk, zk){
+rejection_test <- function(x, h, hk, dhk, xk, zk){
 
   # Generate random sample from uniform distribution
   w = runif(1)
@@ -214,21 +221,6 @@ check_f_positive = function(f, lower, upper) {
     }
     return(FALSE)
   }
-}
-
-# calculate derivative of a function
-# instead of "grad"
-cal_grad = function(x, f, lower=x-0.001, upper=x+0.001, ...) {
-  eps <- (.Machine$double.eps)^(1/4)
-  d <- numeric(0)
-  if (x==lower) d <- (f(x + eps, ...) - f(x, ...))/eps
-  else if (x==upper) d <-  (f(x, ...)- f (x - eps, ...))/eps
-  else if (lower <= x && x <= upper) d <- (f(x + eps, ...)-f(x - eps, ...))/(2*eps)
-  else stop("x is out of bounds.")
-
-  # if limit doesn't exist then we need to stop
-  if(is.na(d) | is.infinite(d) | is.nan(d)) stop("The derivative does not exist.")
-  return(d)
 }
 
 
