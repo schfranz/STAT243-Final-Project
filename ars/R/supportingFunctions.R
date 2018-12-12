@@ -37,11 +37,11 @@ generate_intersect <- function(hk, dhk, xk, lb, ub){
 
 
 # initialization
-initialization_step <- function(h, lb, ub){
+initialization_step <- function(g, lb, ub){
   
   # considering lb and ub is infinity
   # pre-set interval delta
-  maxPoint <- optim(par=0, f = h, method = "L-BFGS-B", 
+  maxPoint <- optim(par=0, f = g, method = "L-BFGS-B", 
                     lower = lb, upper = ub, control=list(fnscale=-1))$par
   if (lb==-Inf & ub==Inf){
     leftPoint = maxPoint-1
