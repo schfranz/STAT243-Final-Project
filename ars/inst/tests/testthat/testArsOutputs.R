@@ -26,3 +26,18 @@ testthat::test_that("test with t-distribution with 1 degree of freedom", {
 	f <- function(x) dt(x, 1)
 	testthat::expect_error(ars(f, 1000, 0, Inf), "non-log-concave")
 })
+
+testthat::test_that("test with default Cauchy distribution", {
+	f <- function(x) dcauchy(x)
+	testthat::expect_error(ars(f, 1000, 0, Inf), "non-log-concave")
+})
+
+testthat::test_that("test with default log-normal distribution", {
+	f <- function(x) dlnorm(x)
+	testthat::expect_error(ars(f, 1000, 0, Inf), "non-log-concave")
+})
+
+testthat::test_that("test with default F distribution with 1 degree of freedom", {
+	f <- function(x) FDist(x, 1)
+	testthat::expect_error(ars(f, 1000, 0, Inf), "non-log-concave")
+})
