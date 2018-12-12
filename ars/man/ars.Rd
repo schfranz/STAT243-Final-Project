@@ -9,22 +9,22 @@ ars(g, n, lb = -Inf, ub = Inf, batchSize = 100, randomState = 1)
 \arguments{
 \item{n}{number of samples}
 
-\item{lb}{lower bound on x axis}
+\item{lb}{lower bound of aimed distribution on x axis}
 
-\item{ub}{upper bound on x axis}
+\item{ub}{upper bound of aimed distribution on x axis}
 
-\item{batchSize}{number of seeds for inverse CDF, default = 100}
+\item{batchSize}{number of random seeds generated in one iteration for sampling from inverse CDF, which avoids sampling from aimed distribution one by one, default = 100}
 
-\item{randomState}{seed for set.seed()}
+\item{randomState}{seed for set.seed() for reproducibility}
 
-\item{G}{original function}
+\item{g}{original function}
 }
 \value{
-Samples from target density
+Samples of size n from target density
 }
 \description{
 This function is a statistical algorithm for generating samples from 
-a univariate, log-concave density.
+a univariate, log-concave density using adaptive rejection sampling.
 }
 \examples{
 g <- function(x) dnorm(x,0,1) 
