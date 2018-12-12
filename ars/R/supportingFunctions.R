@@ -202,7 +202,7 @@ check_f_positive = function(f, lower, upper) {
     return(FALSE)
   }
 
-  roots <- try(uniroot.all(Vectorize(f), lower = lower, upper = upper))
+  roots <- try(rootSolve::uniroot.all(Vectorize(f), lower = lower, upper = upper))
   # if run error
   if(class(roots)=="try-error"){
     stop("Error in uniroot.all.")
