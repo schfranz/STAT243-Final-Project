@@ -33,9 +33,6 @@ generate_intersect <- function(hk, dhk, xk, lb, ub){
   return(zj)
 }
 
-
-
-
 # initialization
 initialization_step <- function(g, lb, ub){
   

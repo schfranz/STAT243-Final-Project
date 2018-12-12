@@ -1,5 +1,7 @@
 #unit tests for supporting functions
 
+#test cal_grad()
+
 
 #test generate_intersect()
 
@@ -32,9 +34,6 @@ test_that("is.wholenumber() returns FALSE for non-integers", {
 
 
 #test check_f_positive()
-
-
-#test cal_grad()
 
 
 #test check_concave()
