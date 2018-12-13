@@ -6,9 +6,9 @@
 cal_grad = function(x, f, lower=x-0.001, upper=x+0.001, ...) {
   eps <- (.Machine$double.eps)^(1/4)
   d <- numeric(0)
-  if (x==lower) d <- (f(x + eps, ...) - f(x, ...))/eps
-  else if (x==upper) d <-  (f(x, ...)- f (x - eps, ...))/eps
-  else if (lower <= x && x <= upper) d <- (f(x + eps, ...)-f(x - eps, ...))/(2*eps)
+  if (x>=lower && x <= lower + eps) d <- (f(x + eps, ...) - f(x, ...))/eps
+  else if (x>=upper-eps && x<=upper) d <-  (f(x, ...)- f (x - eps, ...))/eps
+  else if (lower+eps <= x && x <= upper-eps) d <- (f(x + eps, ...)-f(x - eps, ...))/(2*eps)
   else stop("x is out of bounds.")
   
   # if limit doesn't exist then we need to stop
