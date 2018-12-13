@@ -3,7 +3,7 @@
 
 # calculate derivative of a function
 # instead of "grad"
-cal_grad = function(x, f, lower=x-0.001, upper=x+0.001, ...) {
+cal_grad = function(x, f, lower=lb, upper=ub, ...) {
   eps <- (.Machine$double.eps)^(1/4)
   d <- numeric(0)
   if (x>=lower && x <= lower + eps) d <- (f(x + eps, ...) - f(x, ...))/eps
