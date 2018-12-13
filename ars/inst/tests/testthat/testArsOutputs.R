@@ -41,7 +41,7 @@ testthat::test_that("test with default Cauchy distribution", {
 
 testthat::test_that("test with default log-normal distribution", {
 	f <- function(x) dlnorm(x)
-	testthat::expect_error(ars(f, 1000, 0, 10), "Error in calculating derivative")
+	testthat::expect_error(ars(f, 1000, 0, 10), "non-log-concave")
 })
 
 testthat::test_that("test with chi-squared distribution with 1 degree of freedom", {
@@ -51,5 +51,5 @@ testthat::test_that("test with chi-squared distribution with 1 degree of freedom
 
 testthat::test_that("test with chi-squared distribution with 2 degrees of freedom", {
 	f <- function(x) dchisq(x, 2)
-	testthat::expect_error(ars(f, 1000, 0, 10), "non-log-concave")
+	testthat::expect_error(ars(f, 1000, 1, 10), "non-log-concave")
 })
