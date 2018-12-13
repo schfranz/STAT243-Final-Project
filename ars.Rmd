@@ -1,6 +1,6 @@
 ---
 title: "STAT243_final_project"
-author: "Jennifer Wiederspahn"
+author: "Weijie Yuan, Franziska Schmidt, Jennifer Wiederspahn"
 date: "12/10/2018"
 output: pdf_document
 ---
