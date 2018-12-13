@@ -1,6 +1,6 @@
 ---
 title: "STAT243_final_project"
-author: "Weijie Yuan, Franziska Schmidt, Jennifer Wiederspahn"
+author: "Jennifer Wiederspahn"
 date: "12/10/2018"
 output: pdf_document
 ---
@@ -11,7 +11,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Adaptive Rejection Sampling
 
-*STAT243 Fall 2018 Final Project*
+STAT243 Fall 2018 Final Project
 Group members: Franziska Schmidt, Weijie Yuan, Jennifer Wiederspahn
 Github: schfranz
 
