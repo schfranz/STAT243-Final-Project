@@ -23,6 +23,15 @@ testthat::test_that("generate_intersect returns appropriate intersects between p
 #test initialization_step()
 
 
+initialization_step(g, lb, ub)
+[1] 0.0 2.5 5.0
+> initialization_step(g, lb, ub)
+[1] 0.0 2.5 5.0
+> initialization_step(g, lb, 5)
+[1] 0.00 1.25 2.50
+> initialization_step(g, 1, 2)
+[1] 1.00 1.25 1.50
+
 #test upper_hull()
 
 
@@ -39,24 +48,24 @@ testthat::test_that("generate_intersect returns appropriate intersects between p
 
 
 #test is.wholenumber()
-test_that("is.wholenumber() returns FALSE for non-integers", {
-	expect_equal(is.wholenumber(2.3), FALSE)
-	expect_equal(is.wholenumber(4), TRUE)
-	expect_equal(is.wholenumber(3.0003, tol = 0.0001), FALSE)
-	expect_equal(is.wholenumber(3.0003, tol = 0.001), TRUE)
+testthat::test_that("is.wholenumber() returns FALSE for non-integers", {
+	testthat::expect_equal(is.wholenumber(2.3), FALSE)
+	testthat::expect_equal(is.wholenumber(4), TRUE)
+	testthat::expect_equal(is.wholenumber(3.0003, tol = 0.0001), FALSE)
+	testthat::expect_equal(is.wholenumber(3.0003, tol = 0.001), TRUE)
 })
 
 
 #test check_f_positive()
-test_that("check_f_positive() returns TRUE for positive function", {
-  expect_equal(check_f_positive(exp,0,1), TRUE)
-  expect_equal(check_f_positive(dnorm,-1e8,1e8), TRUE)
+testthat::test_that("check_f_positive() returns TRUE for positive function", {
+	testthat::expect_equal(check_f_positive(exp,0,1), TRUE)
+	testthat::expect_equal(check_f_positive(dnorm,-1e8,1e8), TRUE)
 })
 
 #test check_concave()
-test_that("check_concave returns TRUE for non-concave", {
-  expect_equal(check_concave(c(1,2,3),c(2,3,4)), TRUE)
-  expect_equal(check_concave(c(-1,0,1),c(1,3,1)), TRUE)
-  expect_equal(check_concave(c(-1,0,1),c(1,-3,1)), FALSE)
+testthat::test_that("check_concave returns TRUE for non-concave", {
+	testthat::expect_equal(check_concave(c(1,2,3),c(2,3,4)), TRUE)
+	testthat::expect_equal(check_concave(c(-1,0,1),c(1,3,1)), TRUE)
+	testthat::expect_equal(check_concave(c(-1,0,1),c(1,-3,1)), FALSE)
 })
 
