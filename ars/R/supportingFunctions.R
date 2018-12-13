@@ -27,6 +27,8 @@ generate_intersect <- function(hk, dhk, xk, lb, ub){
 
   # compute zj
   zj <- (hkl-hko-xkl*dhkl+xko*dhko)/(dhko-dhkl)
+  index = which(round(dhko-dhkl,8) == 0)
+  zj[index] = NaN
   # set starting point and ending point
   zj[1] <- lb
   zj[k+1] <- ub
@@ -38,8 +40,10 @@ initialization_step <- function(g, lb, ub){
   
   # considering lb and ub is infinity
   # pre-set interval delta
-  maxPoint <- optim(par=0.1, f = g, method = "L-BFGS-B", 
-                    lower = lb, upper = ub, control=list(fnscale=-1))$par
+  maxPoint <- try(optim(par=0.1, f = g, method = "L-BFGS-B", 
+                    lower = lb, upper = ub, control=list(fnscale=-1))$par,silent=TRUE)
+  if(class(maxPoint)=="try-error") stop("Error in finding maximum, please input log-concave density function.")
+  
   if (lb==-Inf & ub==Inf){
     leftPoint = maxPoint-1
     rightPoint = maxPoint +1

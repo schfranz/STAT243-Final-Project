@@ -55,8 +55,17 @@ ars <- function(g, n, lb=-Inf, ub=Inf, batchSize=100, randomState=1){
     dhk <- try(sapply(xk,cal_grad,h,lb,ub), silent=TRUE)
     if(class(dhk)=="try-error") stop("Error in calculating derivative. Try reasonable lower bound or upper bound.")
 
+    # check for log-concavity of function
+    assertthat::assert_that(check_concave(xk, hk), msg = "The provided function appears to be non-log-concave in parts of the domain. ars() can only draw samples from log-concave functions.")
+    
     #intersection points of upper envelope
     zk <- generate_intersect(hk,dhk,xk,lb,ub)
+    
+    # 
+    indexNaN = c(which(is.na(zk)))
+    xk[indexNaN] = NaN
+    zk <- zk[complete.cases(zk)]
+    xk <- xk[complete.cases(xk)]
     
     #cumulative envelope
     #Calculate areas under exponential upper bound function for normalization purposes
