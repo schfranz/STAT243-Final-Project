@@ -48,8 +48,3 @@ testthat::test_that("test with chi-squared distribution with 1 degree of freedom
 	f <- function(x) dchisq(x, 1)
 	testthat::expect_error(ars(f, 1000, 1, 10), "non-log-concave")
 })
-
-testthat::test_that("test with chi-squared distribution with 2 degrees of freedom", {
-	f <- function(x) dchisq(x, 2)
-	testthat::expect_error(ars(f, 1000, 1, 10), "non-log-concave")
-})

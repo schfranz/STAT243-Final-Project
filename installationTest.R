@@ -2,6 +2,7 @@
 
 #get package from github; should print a bunch of stuff
 devtools::install_github('schfranz/STAT243-Final-Project/ars', force = TRUE)
+#devtools::install_github('schfranz/ars', force = TRUE)
 
 #make package available
 library(ars)
