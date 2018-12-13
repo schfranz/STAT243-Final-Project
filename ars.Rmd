@@ -13,7 +13,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 *STAT243 Fall 2018 Final Project*
 
-Group members: Franziska Schmidt, Weijie Yuan, Jennifer Wiederspahn
+Group members: Franziska Schmidt, Weijie Yuan, Jennifer Wiederspahn/
 Github: schfranz
 
 ### Introduction 
@@ -26,14 +26,14 @@ Generally speaking, the algorithm can be divided up into the following steps: To
 *1. Main function*
 
 - main adaptive rejection sampling function
-- log of the original function
-- find starting x_k using local maximum of 'h' function
-- initialize output variable
-- iterate until we have enough points
-- calculate h_k and derivative of h_k
-- generate sample points from $s_k(x)$
-- carry out rejection test to determine whether we should accept these points and whether we should update these points into original $x_k$
-- cumulative envelop: Calculate areas under exponential upper bound function for normalization purposes, Normalize, Sampling: Generate seeds for Inverse CDF method, Rejection testing, update accpeted points to sample, update x_k
+- takes log of the original function
+- finds starting x_k using local maximum of $h$ function
+- initializes output variable
+- iterates until we have enough points
+- calculates h_k and derivative of h_k
+- generates sample points from $s_k(x)$
+- carries out rejection test to determine whether we should accept these points and whether we should update these points into original $x_k$
+- cumulative envelope: Calculates areas under exponential upper bound function for normalization purposes, Normalize, Sampling: Generates seeds for Inverse CDF method, Rejection testing, updates accpeted points to sample, updates x_k
 
 *2. Supporting functions* 
 
@@ -88,15 +88,15 @@ This is an overview over the most relevant files and directories in the `ars` pa
             - testArsOutputs
             - testSuppFunctions.R
 	  - man/
-	      - ars.RD
+	      - ars.RD/
 		    - ars.Rd
 		
 The package directory `ars` contains three relevant folders: `R`, which contains the main function and supporting functions, `inst`, which forces the installation of all tests contained in `tests/testthat`, and `man`, which contains information for the package's help functions.
 
 ### Contributions
 
-*Weijie Yuan:* main function, supporting functions and some test samples
-*Franziska Schmidt:* Github support, unit testing
-*Jennifer Wiederspahn:* R package and report writing
+*Weijie Yuan:* main function, supporting functions and some test samples/
+*Franziska Schmidt:* Github support, unit testing/
+*Jennifer Wiederspahn:* R package and report writing/
 
 All team members contributed to the development of their own and other member's parts via Slack and during meetings.
