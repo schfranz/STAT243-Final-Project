@@ -3,6 +3,7 @@
 #variables needed for tests
 g <- function(x) dnorm(x,0,1) #normal distribution as function input
 lb <- 0 #functional lower bound
+lb2 <- 1 #another lower bound
 ub <- 10 #functional upper bound
 deriv0 <- 0 #functional derivative of 0
 deriv1 <- 1 #functional derivative of 1
@@ -21,16 +22,10 @@ testthat::test_that("generate_intersect returns appropriate intersects between p
 })
 
 #test initialization_step()
-
-
-initialization_step(g, lb, ub)
-[1] 0.0 2.5 5.0
-> initialization_step(g, lb, ub)
-[1] 0.0 2.5 5.0
-> initialization_step(g, lb, 5)
-[1] 0.00 1.25 2.50
-> initialization_step(g, 1, 2)
-[1] 1.00 1.25 1.50
+testthat::test_that("initialization_step() produces an initial step consisting of the lower bound, half of the difference between upper and lower bound, and evenly spaced points in between", {
+	testthat::expect_equal(initialization_step(g, lb, ub), c(lb, (ub-lb)/4+lb, (ub-lb)/2+lb))
+	testthat::expect_equal(initialization_step(g, lb2, ub), c(lb2, (ub-lb2)/4+lb2, (ub-lb2)/2+lb2))
+})
 
 #test upper_hull()
 
